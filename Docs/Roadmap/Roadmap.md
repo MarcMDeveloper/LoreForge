@@ -1,10 +1,10 @@
 # 📅 LoreForge Development Roadmap
 
-This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System**, from Unity agent creation to the integration of a Python-powered NPC generator.
+This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System**, from Unity agent creation to the integration of a Python-powered NPC generator. The tasks are as small as possible to mantain an order with the important sections.
 
 ---
 
-## **Week 1 – Unity NPC Agent Setup & Dialogue System**
+## **Week 1 – Unity NPC Agent Setup & Dialogue System/ NPC to user**
 
 - ✅ Set up Repo project (`LoreForge`)  
 - ✅ Add basic docs and gitignore to the project  
@@ -15,10 +15,11 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Define NPC ID, Name, Culture, Traits fields  
 - ✅ Create mock up Json with two `NPC`
 - ✅ Create NPC constructor for callling it from the NPCs manager and the json loader
-- Implement JSON loader for NPCs functions, the class will be signleton to use in other as functionallity 
+- ✅ Set up the singleton managers (`JsonLoader`, `NPCManager`, `DialogueManager`)
+- ✅ Implement JSON loader for NPCs
   
-- Implement NPC manager as singleton that can read NPCs JSON  
-- Debug data loading  
+- ✅ Implement `NPC manager` as singleton that can read NPCs JSON  
+- ✅ Debug data loading  
 - NPC creation
 - Create the UI to see the the different NPC selection with images
 - Implement **basic AI agent class**
@@ -31,7 +32,7 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 
 ---
 
-## **Week 2 – Enhancing Agent Memory & Behavior**
+## **Week 2 – Enhancing Agent Memory & Behavior NPC to NPC**
 
 - Implement **NPC-to-NPC interaction system**  
 - Create the UI to see the text of the NPC dialogue with NPC
