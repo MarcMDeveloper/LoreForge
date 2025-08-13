@@ -45,8 +45,8 @@ public class NPCsManager : MonoBehaviour
     {
         npcs.Add(new NPC(
             NPCs.id, NPCs.name, NPCs.gender, NPCs.age, NPCs.culture,
-            NPC.NPC_Appearance(NPCs.appearance.hair_color,NPCs.appearance.eye_color,NPCs.appearance.height_cm,NPCs.appearance.build),
-            NPC.NPC_Personality(NPCs.personality.openness, NPCs.personality.conscientiousness, NPCs.personality.extraversion, NPCs.personality.agreeableness, NPCs.personality.neuroticism),
+            new NPC.NPC_Appearance(NPCs.appearance.hair_color,NPCs.appearance.eye_color,NPCs.appearance.height_cm,NPCs.appearance.build),
+            new NPC.NPC_Personality(NPCs.personality.openness, NPCs.personality.conscientiousness, NPCs.personality.extraversion, NPCs.personality.agreeableness, NPCs.personality.neuroticism),
             NPCs.traits, NPCs.brief_history, NPCs.portrait, NPCs.goal, NPCs.occupation
         ));
     }
