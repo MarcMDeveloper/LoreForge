@@ -23,9 +23,10 @@ public class NPC : MonoBehaviour
     public string occupation;
     #endregion
 
-    #region Constructor
-    public NPC(string id, string npc_name, string gender, int age, string culture,
-            NPC_Appearance appearance, NPC_Personality personality,
+    #region Initialization
+    public void Initialize(string id, string npc_name, string gender, int age, string culture,
+            NPC_Appearance appearance,
+            NPC_Personality personality,
             List<string> traits, string briefHistory, string portraitPath, string goals, string occupation)
     {
         // Assign values to the NPC fields
@@ -93,7 +94,7 @@ public class NPC : MonoBehaviour
             this.agreeableness = agreeableness;
             this.neuroticism = neuroticism;
         }   
-        
+
         [Range(0f, 1f)] public float openness;
         [Range(0f, 1f)] public float conscientiousness;
         [Range(0f, 1f)] public float extraversion;
