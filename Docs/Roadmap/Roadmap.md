@@ -9,18 +9,20 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Set up Repo project (`LoreForge`)  
 - ✅ Add basic docs and gitignore to the project  
 - ✅ Set up Unity project (`Echoes of the crowd`)  
-- ✅ Create initial scene (`MainScene`)  
+- ✅ Create the different scenes (`Main Menu`, `MainScene`)  
 - ✅ Create `NPC` script structure 
  
 - ✅ Define NPC ID, Name, Culture, Traits fields  
 - ✅ Create mock up Json with two `NPC`
-- Create NPC constructor for callling it from the NPCs manager and the json loader
-- Implement JSON loader for NPCs  
+- ✅ Create NPC constructor for callling it from the NPCs manager and the json loader
+- Implement JSON loader for NPCs functions, the class will be signleton to use in other as functionallity 
   
-- NPC manager can read NPCs JSON  
+- Implement NPC manager as singleton that can read NPCs JSON  
 - Debug data loading  
-- Create the UI to see the the different NPC selection
+- NPC creation
+- Create the UI to see the the different NPC selection with images
 - Implement **basic AI agent class**
+- Create Agent constructor and a basic update
 
 - Design **dialogue manager** script  
 - Connect AI agent to dialogue manager 
@@ -70,6 +72,12 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Prepare final demo scene  
 
 ---
+
+## *Next Steps - In case there is time*
+
+- Music changes depending of the tone of conversation (positive/negative)
+- Main Menu detects if there is money in OPEN AI before allowing to continue the game
+- Saves data from user as jsons so works when returns
 
 ### 📝 Notes
 - **Weeks 1–2** focus on Unity-based agent creation, dialogue, and behavior.
