@@ -1,0 +1,52 @@
+[
+  {
+    "id": "npc_001",
+    "name": "Kael Veyrin",
+    "gender": "Male",
+    "age": 34,
+    "culture": "Northern European",
+    "appearance": {
+      "hair_color": "blonde",
+      "eye_color": "blue",
+      "height_cm": 182,
+      "build": "muscular"
+    },
+    "personality": {
+      "openness": 0.55,
+      "conscientiousness": 0.70,
+      "extraversion": 0.60,
+      "agreeableness": 0.50,
+      "neuroticism": 0.40
+    },
+    "traits": ["loyal", "disciplined", "protective"],
+    "brief_history": "Kael was raised in a coastal village, training with the local militia from a young age. He dreams of defending his homeland from invaders and making a name as a legendary warrior.",
+    "portrait": "temp.png",
+    "goal": "become captain of the guard",
+    "occupation": "Guard"
+  },
+  {
+    "id": "npc_002",
+    "name": "Liora Mei",
+    "gender": "Female",
+    "age": 22,
+    "culture": "East Asian",
+    "appearance": {
+      "hair_color": "dark brown",
+      "eye_color": "hazel",
+      "height_cm": 160,
+      "build": "slender"
+    },
+    "personality": {
+      "openness": 0.80,
+      "conscientiousness": 0.50,
+      "extraversion": 0.75,
+      "agreeableness": 0.65,
+      "neuroticism": 0.25
+    },
+    "traits": ["creative", "adventurous", "quick thinker"],
+    "brief_history": "Liora grew up in a city of scholars and artists. She has always loved exploring new ideas and places, often getting into trouble due to her curiosity and spontaneity.",
+    "portrait": "temp.png",
+    "goal": "become a renowned explorer",
+    "occupation": "Cartographer"
+  }
+]
