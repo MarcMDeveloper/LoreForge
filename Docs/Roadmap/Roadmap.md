@@ -72,4 +72,3 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 ### 📝 Notes
 - **Weeks 1–2** focus on Unity-based agent creation, dialogue, and behavior.
 - **Week 3** focuses on Python-based random NPC generation.
-- Dialogue and interactions are **not stored in JSON**; only core NPC data is kept for AI prompts.
