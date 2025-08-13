@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using TMPro;
 
 
 [System.Serializable]
-public class NPC : MonoBehaviour
+public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     #region Fields
+    [Header("Loaded data")]
+    // Saved data
     public Agent agent;
     public string id;
     public string npc_name;
@@ -19,8 +24,17 @@ public class NPC : MonoBehaviour
     public List<string> traits;
     public string briefHistory;
     public string portraitPath;
-    public string goals;
+    public string goal;
     public string occupation;
+    
+    [Header("UI related")]
+    // UI related fields
+    public Image portraitImage;       
+    public TMP_Text nameText;
+
+    // Tooltip reference
+    private NPCTooltip tooltip;
+
     #endregion
 
     #region Initialization
@@ -40,16 +54,37 @@ public class NPC : MonoBehaviour
         this.traits = traits;
         this.briefHistory = briefHistory;
         this.portraitPath = portraitPath;
-        this.goals = goals;
+        this.goal = goals;
         this.occupation = occupation;
 
         // Initialize the agent for this NPC
-        this.agent = new Agent();
+        //this.agent = new Agent();
+
+        tooltip = FindObjectOfType<NPCTooltip>();
+
+        // Set the sprite and the name
+        // Sprite portraitSprite = Resources.Load<Sprite>(npcData.portraitPath);
+        nameText.text = npc_name;
+
     }
     #endregion
 
     #region HelperFunctions
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        tooltip?.ShowTooltip(this, GetComponent<RectTransform>());
+    }
 
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        tooltip?.HideTooltip();
+    }
+
+    public void OnClick()
+    {
+        Debug.Log($"NPC clicked: {npc_name}");
+        // Here you can implement what happens when the NPC is clicked
+    }
     #endregion
 
 

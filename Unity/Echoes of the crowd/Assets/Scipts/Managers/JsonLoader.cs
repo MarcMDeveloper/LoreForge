@@ -51,7 +51,7 @@ public static class JsonLoader
     public static async Task<NPCList> LoadFromStreamingAssets(string filePath)
     {
         string fullPath = System.IO.Path.Combine(Application.streamingAssetsPath, filePath);
-        Debug.Log("Loading NPCs from: " + fullPath);
+        
         using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
         {
             var operation = request.SendWebRequest();

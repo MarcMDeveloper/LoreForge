@@ -15,7 +15,8 @@ public class NPCsManager : MonoBehaviour
     private float cellWidth = 100f; // Width of each button/image
     private float cellHeight = 120f; // Height of each button/image
     private Vector2 startOffset = new Vector2(100f, -100f); // Top-left starting point
-    private int npcCount = 0; 
+    private int npcCount = 0;
+
     #endregion
 
     // This class will manage the creation of the NPCs in the game 
@@ -38,6 +39,7 @@ public class NPCsManager : MonoBehaviour
     }
     #endregion
 
+    #region NPC Management functions
     public async void LoadNPCs()
     {
         NPCList npcList = await JsonLoader.LoadFromStreamingAssets(jsonFilePath);
@@ -116,12 +118,6 @@ public class NPCsManager : MonoBehaviour
         {
             Debug.LogError("Prefab is missing NPC component!");
         }
-       /* npcs.Add(new NPC(
-             NPCs.id, NPCs.name, NPCs.gender, NPCs.age, NPCs.culture,
-             new NPC.NPC_Appearance(NPCs.appearance.hair_color,NPCs.appearance.eye_color,NPCs.appearance.height_cm,NPCs.appearance.build),
-             new NPC.NPC_Personality(NPCs.personality.openness, NPCs.personality.conscientiousness, NPCs.personality.extraversion, NPCs.personality.agreeableness, NPCs.personality.neuroticism),
-             NPCs.traits, NPCs.brief_history, NPCs.portrait, NPCs.goal, NPCs.occupation
-         ));*/
     }
-
+    #endregion
 }

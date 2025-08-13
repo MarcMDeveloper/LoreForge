@@ -24,8 +24,8 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ NPC creation with basic prefab
 - ✅ Create the UI to see the the different NPC selection with images
 - ✅ Implement the NPCManager to show the different NPCs in the screen
-- Implement OnHover function that shows the data
-- Set a mock up onPress for future dialogue manager call
+- ✅ Implement OnHover function that shows the data
+- ✅ Set a mock up onPress for future dialogue manager call
 
 - Implement **basic AI agent class**
 - Create Agent constructor and a basic update

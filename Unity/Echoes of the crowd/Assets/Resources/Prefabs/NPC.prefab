@@ -204,8 +204,10 @@ MonoBehaviour:
   traits: []
   briefHistory: 
   portraitPath: 
-  goals: 
+  goal: 
   occupation: 
+  portraitImage: {fileID: 4091605493952016500}
+  nameText: {fileID: 666966634280148922}
 --- !u!1 &3067427776304766348
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +329,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2475725257952034411}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7027101109246022287}
+        m_TargetAssemblyTypeName: NPC, Assembly-CSharp
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3129388669305850889
 GameObject:
   m_ObjectHideFlags: 0
