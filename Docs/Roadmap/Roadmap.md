@@ -20,7 +20,7 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
   
 - ✅ Implement `NPC manager` as singleton that can read NPCs JSON  
 - ✅ Debug data loading  
-- NPC creation
+- NPC creation with basic prefab
 - Create the UI to see the the different NPC selection with images
 - Implement **basic AI agent class**
 - Create Agent constructor and a basic update
