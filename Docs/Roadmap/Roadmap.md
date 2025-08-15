@@ -17,23 +17,27 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Create NPC constructor for callling it from the NPCs manager and the json loader
 
 - ✅ Set up the singleton managers (`JsonLoader`, `NPCManager`, `DialogueManager`)
-- ✅ Implement JSON loader for NPCs
+- ✅ Implement JSON loader for NPCs, static
 - ✅ Implement `NPC manager` as singleton that can read NPCs JSON  
 - ✅ Debug data loading  
 
 - ✅ NPC creation with basic prefab
 - ✅ Create the UI to see the the different NPC selection with images
 - ✅ Implement the NPCManager to show the different NPCs in the screen
+- ✅ Set up the prefab for showing data
 - ✅ Implement OnHover function that shows the data
 - ✅ Set a mock up onPress for future dialogue manager call
 
-- Implement **basic AI agent class**
-- Create Agent constructor and a basic update
+- ✅ Create the Base Chat Canvas and add a Scroll View for Messages
+- ✅ Create Message Prefabs
+- Add the Input Bar, Set Anchors & Auto-Layout and Sorting & Visibility
+
+- Create Agent constructor and a basic update separate in functions
+- Set next input as function to send answer and show the text
 
 - Design **dialogue manager** script  
 - Connect AI agent to dialogue manager 
-- Create the UI to see the text of the NPC dialogue with user
-- Implement **player-to-NPC greeting**  
+- When open a conversation already started instantiate all the conversation since the start
 
 ---
 
@@ -84,6 +88,8 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Music changes depending of the tone of conversation (positive/negative)
 - Main Menu detects if there is money in OPEN AI before allowing to continue the game
 - Saves data from user as jsons so works when returns
+- Search and implement some art
+- Load json an images from drive with specific links to avoid using the same of the build.
 
 ### 📝 Notes
 - **Weeks 1–2** focus on Unity-based agent creation, dialogue, and behavior.
