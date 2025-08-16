@@ -30,10 +30,11 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 
 - ✅ Create the Base Chat Canvas and add a Scroll View for Messages
 - ✅ Create Message Prefabs
-- Add the Input Bar, Set Anchors & Auto-Layout and Sorting & Visibility
+- ✅ Add the Input Bar, Set Anchors & Auto-Layout and Sorting & Visibility
 
-- Create Agent constructor and a basic update separate in functions
-- Set next input as function to send answer and show the text
+- ✅ Set next input as function to send answer and show the text
+- ✅ Create Agent constructor and a basic update separate in functions
+- Implement the different functions
 
 - Design **dialogue manager** script  
 - Connect AI agent to dialogue manager 
@@ -43,19 +44,19 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 
 ## **Week 2 – Enhancing Agent Memory & Behavior NPC to NPC**
 
-- Implement **NPC-to-NPC interaction system**  
-- Create the UI to see the text of the NPC dialogue with NPC
-- Test multiple agents in scene  
-- Debug system prompts for AI dialogue  
+- Improve **behavior logic** based on personality traits (risk-averse, friendly, etc.)  
+- Create simple decision-making examples
 
 - Implement **short-term memory** in NPC agent  
 - Track player interactions in runtime  
 
-- Improve **behavior logic** based on personality traits (risk-averse, friendly, etc.)  
-- Create simple decision-making examples  
-
 - Integrate AI-generated dialogue dynamically with memory  
 - Test dialogue adapting to player actions  
+
+- Implement **NPC-to-NPC interaction system**  
+- Create the UI to see the text of the NPC dialogue with NPC
+- Test multiple agents in scene  
+- Debug system prompts for AI dialogue  
 
 - Debug and polish NPC interactions  
 - Optimize agent update loops and dialogue triggers  

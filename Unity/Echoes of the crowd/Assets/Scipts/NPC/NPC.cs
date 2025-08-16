@@ -7,7 +7,7 @@ using TMPro;
 
 
 [System.Serializable]
-public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IPointerExitHandler
 {
     #region Fields
     [Header("Loaded data")]
@@ -58,7 +58,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         this.occupation = occupation;
 
         // Initialize the agent for this NPC
-        //this.agent = new Agent();
+        this.agent = new Agent(CreatePrompt());
 
         tooltip = FindObjectOfType<NPCTooltip>();
 
@@ -75,15 +75,21 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         tooltip?.ShowTooltip(this, GetComponent<RectTransform>());
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log($"NPC clicked: {npc_name}");
+
+        // Call the dialogue manager to start a conversation
+
+    }
     public void OnPointerExit(PointerEventData eventData)
     {
         tooltip?.HideTooltip();
     }
 
-    public void OnClick()
+    private string CreatePrompt()
     {
-        Debug.Log($"NPC clicked: {npc_name}");
-        // Here you can implement what happens when the NPC is clicked
+        return "";
     }
     #endregion
 
