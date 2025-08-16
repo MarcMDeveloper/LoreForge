@@ -58,7 +58,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         this.occupation = occupation;
 
         // Initialize the agent for this NPC
-        this.agent = new Agent(CreatePrompt());
+        this.agent = new Agent(CreateSystemPrompt());
 
         tooltip = FindObjectOfType<NPCTooltip>();
 
@@ -87,24 +87,67 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         tooltip?.HideTooltip();
     }
 
-    private string CreatePrompt()
+    private string CreateSystemPrompt()
     {
-        return "";
+        return
+        $@"### NPC Role Definition ###
+        You are roleplaying as a game NPC. Stay in character at all times.
+
+        **ID:** {id}  
+        **Name:** {npc_name}  
+        **Gender:** {gender}  
+        **Age:** {age}  
+        **Culture:** {culture}  
+        **Occupation:** {occupation}  
+        **Goal:** {goal}  
+
+        ### Appearance ###
+        **Hair Color:** {appearance.hair_color}  
+        **Eye Color:** {appearance.eye_color}  
+        **Height:** {appearance.height_cm} cm  
+        **Build:** {appearance.build}  
+
+        ### Personality Traits (Big Five) ###
+        **Openness:** {personality.openness}  
+        **Conscientiousness:** {personality.conscientiousness}  
+        **Extraversion:** {personality.extraversion}  
+        **Agreeableness:** {personality.agreeableness}  
+        **Neuroticism:** {personality.neuroticism}  
+
+        ### Distinctive Traits ###
+        - {string.Join("\n- ", traits)}
+
+        ### Backstory ###
+        {briefHistory}
+
+        ---
+
+        ### Behavioral Rules ###
+        - Always stay in character as **{npc_name}**.  
+        - Keep responses **short (under 100 tokens)** and natural, like real dialogue.  
+        - Respond according to personality, backstory, and traits.  
+        - Use aggression only if it fits your personality when user is hostile.  
+        - Do **not break character** or mention being an AI.
+
+        ### Conversation Style Guidelines ###
+        {CreateStyleHints()}
+        ";
     }
+
+    private string CreateStyleHints()
+    {
+        // Generate personality style hints
+        string styleHints = "";
+
+        styleHints += personality.openness >= 0.6f ? "- **Openness:** imaginative, curious, and open to new ideas.\n" : "- **Openness:** practical, concrete, and prefers routine.\n";
+        styleHints += personality.conscientiousness >= 0.6f ? "- **Conscientiousness:** structured, careful, and reliable.\n" : "- **Conscientiousness:** spontaneous, casual, and informal.\n";
+        styleHints += personality.extraversion >= 0.6f ? "- **Extraversion:** energetic, talkative, engages actively.\n" : "- **Extraversion:** reserved, quiet, short replies.\n";
+        styleHints += personality.agreeableness >= 0.6f ? "- **Agreeableness:** kind, empathetic, cooperative.\n" : "- **Agreeableness:** blunt, self-focused, argumentative if needed.\n";
+        styleHints += personality.neuroticism >= 0.6f ? "- **Neuroticism:** emotional, slightly anxious or reactive.\n" : "- **Neuroticism:** calm, steady, confident.\n";
+
+        return styleHints;
+    } 
     #endregion
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     #region Nested Classes 
     [System.Serializable]
@@ -112,15 +155,15 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
     {
         public NPC_Appearance(string hairColor, string eyeColor, int heightCm, string build)
         {
-            this.hairColor = hairColor;
-            this.eyeColor = eyeColor;
-            this.heightCm = heightCm;
+            this.hair_color = hairColor;
+            this.eye_color = eyeColor;
+            this.height_cm = heightCm;
             this.build = build;
         }
 
-        public string hairColor;
-        public string eyeColor;
-        public int heightCm;
+        public string hair_color;
+        public string eye_color;
+        public int height_cm;
         public string build;
     }
 

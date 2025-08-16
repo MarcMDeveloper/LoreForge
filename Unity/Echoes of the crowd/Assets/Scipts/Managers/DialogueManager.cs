@@ -22,6 +22,8 @@ public class DialogueManager : MonoBehaviour
         // Assign instance
         Instance = this;
 
+        ChatScreen.SetActive(false);
+
         // Keep this object alive between scenes
         DontDestroyOnLoad(gameObject);
     }

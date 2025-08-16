@@ -58,12 +58,7 @@ public class Agent
         conversation.Add(new OpenAIMessage
         {
             role = "system",
-            content = "### \n Role:\n" +
-            systemPrompt +
-            "\n ###\n" +
-            "- Your behaviour will be defined by your role data \n" +
-            "- If user uses agresivity or hate you can change the behaviour to agressive one if your personality goes with it\n  " +
-            "- Your answers should be less than 100 tokens\n"
+            content = systemPrompt
         });
     }
 
