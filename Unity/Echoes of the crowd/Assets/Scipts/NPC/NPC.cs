@@ -58,7 +58,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         this.occupation = occupation;
 
         // Initialize the agent for this NPC
-        this.agent = new Agent(CreateSystemPrompt());
+        CreateAgent();
 
         tooltip = FindObjectOfType<NPCTooltip>();
 
@@ -69,24 +69,36 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
     }
     #endregion
 
-    #region HelperFunctions
+    #region Unity Events
     public void OnPointerEnter(PointerEventData eventData)
     {
         tooltip?.ShowTooltip(this, GetComponent<RectTransform>());
     }
 
+    public void OnClick()
+    { 
+        DialogueManager.Instance.StartChat(this);
+    }
+    // Future check wht does not work
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log($"NPC clicked: {npc_name}");
 
         // Call the dialogue manager to start a conversation
-
+        DialogueManager.Instance.StartChat(this);
     }
     public void OnPointerExit(PointerEventData eventData)
     {
         tooltip?.HideTooltip();
     }
+    #endregion
 
+    #region HelperFunctions
+    public void CreateAgent()
+    {
+        // Create a new agent with the system prompt
+        agent = new Agent(CreateSystemPrompt());
+    }
     private string CreateSystemPrompt()
     {
         return

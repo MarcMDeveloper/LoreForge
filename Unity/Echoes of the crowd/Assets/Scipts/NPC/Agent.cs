@@ -51,7 +51,7 @@ public class Agent
         // Save system for now (Check later if really need it)
         systemPrompt = sysPr;
 
-        Debug.Log("Agent created with system prompt: " + systemPrompt);
+        //Debug.Log("Agent created with system prompt: " + systemPrompt);
 
         // Create conversation and set up the first message
         conversation = new List<OpenAIMessage>();
@@ -106,7 +106,7 @@ public class Agent
         Debug.Log("Answer received: " + answer);
     }
 
-
+    // Reset chat
     private void FinishChat()
     { 
         // Take the conversation and send a request to the AI to summarize it
