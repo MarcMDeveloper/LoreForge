@@ -34,7 +34,7 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 
 - ✅ Set next input as function to send answer and show the text
 - ✅ Create Agent constructor and a basic update separate in functions
-- Implement the different functions
+- ✅ Implement the different functions
 
 - Design **dialogue manager** script  
 - Connect AI agent to dialogue manager 

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.Net.Http;    
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 using Newtonsoft.Json;
+using UnityEngine;
 
 #region Nested Classes
 [System.Serializable]
@@ -40,6 +40,9 @@ public class Agent
 
     // DANGEROUS TAKE OUT OF HERE
     private string apiKey = " ";
+
+    // See if can be done different
+    private static readonly HttpClient httpClient = new HttpClient();
     #endregion
 
 
@@ -70,9 +73,8 @@ public class Agent
     }
     private async Task SendMessageToChatGPT(string message)
     {
-        conversation.Add(new OpenAIMessage { role = "user", content = message });
+         conversation.Add(new OpenAIMessage { role = "user", content = message });
 
-        // Build request body
         var requestBody = new OpenAIRequest
         {
             model = "gpt-4o-mini",
@@ -86,22 +88,17 @@ public class Agent
             request.Headers.Add("Authorization", $"Bearer {apiKey}");
             request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-            try
-            {
-                var response = await httpClient.SendAsync(request);
-                string responseText = await response.Content.ReadAsStringAsync();
+            var response = await httpClient.SendAsync(request);
+            string responseText = await response.Content.ReadAsStringAsync();
 
-                Debug.Log("Raw Response: " + responseText);
+            Debug.Log("Raw Response: " + responseText);
 
-                var aiResponse = JsonConvert.DeserializeObject<OpenAIResponse>(responseText);
-                string answer = aiResponse?.choices?[0]?.message?.content ?? "No response";
+            var parsed = JsonConvert.DeserializeObject<OpenAIResponse>(responseText);
+            string answer = parsed?.choices?[0]?.message?.content ?? "No response";
 
-                ManageAnswer(answer);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError("Error contacting OpenAI: " + ex.Message);
-            }
+            conversation.Add(new OpenAIMessage { role = "assistant", content = answer });
+
+            ManageAnswer(answer);
         }
     }
 
@@ -112,7 +109,6 @@ public class Agent
 
         // Call DialogueManager to update the dialogue UI
         Debug.Log("Answer received: " + answer);
-
     }
 
 
@@ -120,7 +116,4 @@ public class Agent
     { 
         // Take the conversation and send a request to the AI to summarize it
     }
-
-
-
 }

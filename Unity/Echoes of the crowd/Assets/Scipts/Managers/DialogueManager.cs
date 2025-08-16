@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
 {
+    #region Variables
+    public GameObject ChatScreen;
+    #endregion
+
     #region Singleton Setup
     public static DialogueManager Instance { get; private set; }
     private void Awake()
@@ -23,15 +27,12 @@ public class DialogueManager : MonoBehaviour
     }
     #endregion
 
-    // Start is called before the first frame update
-    void Start()
+    public void OpenChatScreen()
     {
-        
+        ChatScreen.SetActive(true);
     }
-
-    // Update is called once per frame
-    void Update()
+    public void CloseChatScreen()
     {
-        
+        ChatScreen.SetActive(false);
     }
 }
