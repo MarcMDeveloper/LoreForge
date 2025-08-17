@@ -60,7 +60,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         // Initialize the agent for this NPC
         CreateAgent();
 
-        tooltip = FindObjectOfType<NPCTooltip>();
+        tooltip = FindFirstObjectByType<NPCTooltip>();
 
         // Set the sprite and the name
         // Sprite portraitSprite = Resources.Load<Sprite>(npcData.portraitPath);
