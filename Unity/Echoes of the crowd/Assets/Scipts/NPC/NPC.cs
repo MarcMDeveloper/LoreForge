@@ -91,6 +91,13 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
     {
         tooltip?.HideTooltip();
     }
+
+    public void SendPrompt(string message)
+    {
+        // Send the message to the agent
+        _ =agent.SendPrompt(message);
+    }
+    
     #endregion
 
     #region HelperFunctions

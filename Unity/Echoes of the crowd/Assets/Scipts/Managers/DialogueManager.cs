@@ -44,10 +44,41 @@ public class DialogueManager : MonoBehaviour
     }
     #endregion
 
+    public Transform contentTransform;  // Drag the ScrollView Content here
+    public GameObject npcMessagePrefab;
+    public GameObject playerMessagePrefab;
+    public ScrollRect scrollRect;       // Reference to ScrollView itself
+
+    #region Chat UI 
+    // Add NPC message
+    public void AddNPCMessage(string message)
+    {
+        GameObject newMessage = Instantiate(npcMessagePrefab, contentTransform);
+        newMessage.GetComponentInChildren<TMP_Text>().text = message;
+        ScrollToBottom();
+    }
+
+    // Add Player message
+    public void AddPlayerMessage(string message)
+    {
+        GameObject newMessage = Instantiate(playerMessagePrefab, contentTransform);
+        newMessage.GetComponentInChildren<TMP_Text>().text = message;
+        ScrollToBottom();
+    }
+
+    // Keep scroll at bottom when new message appears
+    private void ScrollToBottom()
+    {
+        Canvas.ForceUpdateCanvases();
+        scrollRect.verticalNormalizedPosition = 0f;
+    }
+    #endregion
+    
     #region Chat USER - NPC 
     public void StartChat(NPC npc)
     {
-        Debug.Log($"Starting chat with NPC: {npc.npc_name}");
+        // Agent already created not necessary to create it again
+        //Debug.Log($"Starting chat with NPC: {npc.npc_name}");
         // Initialize the agent for this NPC
         // npc.agent = new Agent(npc.CreateSystemPrompt());
 
@@ -77,25 +108,23 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        
+        npcsInChat[0].SendPrompt(currenMessage);
+
+        AddPlayerMessage(currenMessage);               
 
     }
-    public void MessageSend()
+    
+    public void MessageRecived(string message)
     {
-
-    }
-
-    public void MessageRecived()
-    {
-
+        AddNPCMessage(message);
     }
     #endregion
 
     #region Chat load management
     public void ClearChat()
     {
-
-    }
+        npcsInChat.Clear();
+    }   
 
     public void LoadChat(int firstID, int secondID)
     {

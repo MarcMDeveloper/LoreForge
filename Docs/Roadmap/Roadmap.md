@@ -35,23 +35,20 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Set next input as function to send answer and show the text
 - ✅ Create Agent constructor and a basic update separate in functions
 - ✅ Implement the different functions
-
-- Design **dialogue manager** script  
-- Connect AI agent to dialogue manager 
-- When open a conversation already started instantiate all the conversation since the start
-
+- ✅ Improve **behavior logic** based on personality traits (risk-averse, friendly, etc.)  
 ---
 
 ## **Week 2 – Enhancing Agent Memory & Behavior NPC to NPC**
 
-- Improve **behavior logic** based on personality traits (risk-averse, friendly, etc.)  
-- Create simple decision-making examples
-
-- Implement **short-term memory** in NPC agent  
-- Track player interactions in runtime  
-
+- ✅ Design **dialogue manager** script  
+- ✅ Connect AI agent to dialogue manager 
+- ✅ Track player interactions in runtime 
 - Integrate AI-generated dialogue dynamically with memory  
 - Test dialogue adapting to player actions  
+- Implement **short-term memory** in NPC agent  
+
+- When close a conversation save as summart
+- When open a conversation already started show summary of previous
 
 - Implement **NPC-to-NPC interaction system**  
 - Create the UI to see the text of the NPC dialogue with NPC
@@ -59,7 +56,10 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Debug system prompts for AI dialogue  
 
 - Debug and polish NPC interactions  
-- Optimize agent update loops and dialogue triggers  
+- Full flow test
+
+- Design time
+- Art time
 
 ---
 
@@ -91,6 +91,7 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Saves data from user as jsons so works when returns
 - Search and implement some art
 - Load json an images from drive with specific links to avoid using the same of the build.
+- Look security aki key
 
 ### 📝 Notes
 - **Weeks 1–2** focus on Unity-based agent creation, dialogue, and behavior.

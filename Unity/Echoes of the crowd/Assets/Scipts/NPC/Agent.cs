@@ -39,7 +39,7 @@ public class Agent
     private List<string> conversationsSummary;
 
     // DANGEROUS TAKE OUT OF HERE
-    private string apiKey = " ";
+    private string apiKey = "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";
 
     // See if can be done different
     private static readonly HttpClient httpClient = new HttpClient();
@@ -86,8 +86,6 @@ public class Agent
             var response = await httpClient.SendAsync(request);
             string responseText = await response.Content.ReadAsStringAsync();
 
-            Debug.Log("Raw Response: " + responseText);
-
             var parsed = JsonConvert.DeserializeObject<OpenAIResponse>(responseText);
             string answer = parsed?.choices?[0]?.message?.content ?? "No response";
 
@@ -103,7 +101,7 @@ public class Agent
         conversation.Add(new OpenAIMessage { role = "assistant", content = answer });
 
         // Call DialogueManager to update the dialogue UI
-        Debug.Log("Answer received: " + answer);
+        DialogueManager.Instance.MessageRecived(answer);
     }
 
     // Reset chat
