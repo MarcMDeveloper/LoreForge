@@ -104,7 +104,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
     public void CreateAgent()
     {
         // Create a new agent with the system prompt
-        agent = new Agent(CreateSystemPrompt());
+        agent = new Agent(CreateSystemPrompt(), npc_name);
     }
     private string CreateSystemPrompt()
     {

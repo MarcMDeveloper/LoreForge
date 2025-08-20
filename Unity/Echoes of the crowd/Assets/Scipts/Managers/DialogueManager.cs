@@ -51,18 +51,18 @@ public class DialogueManager : MonoBehaviour
 
     #region Chat UI 
     // Add NPC message
-    public void AddNPCMessage(string message)
+    public void AddLeftMessage(string name, string message)
     {
         GameObject newMessage = Instantiate(npcMessagePrefab, contentTransform);
-        newMessage.GetComponentInChildren<TMP_Text>().text = message;
+        newMessage.GetComponent<ChatUIBehaviour>().AddLeftMessage(name,message);
         ScrollToBottom();
     }
 
     // Add Player message
-    public void AddPlayerMessage(string message)
+    public void AddRightMessage(string name,string message)
     {
         GameObject newMessage = Instantiate(playerMessagePrefab, contentTransform);
-        newMessage.GetComponentInChildren<TMP_Text>().text = message;
+        newMessage.GetComponent<ChatUIBehaviour>().AddLeftMessage(name,message);
         ScrollToBottom();
     }
 
@@ -110,13 +110,13 @@ public class DialogueManager : MonoBehaviour
 
         npcsInChat[0].SendPrompt(currenMessage);
 
-        AddPlayerMessage(currenMessage);               
+        AddLeftMessage("User",currenMessage);               
 
     }
     
-    public void MessageRecived(string message)
+    public void MessageRecived(string name, string message)
     {
-        AddNPCMessage(message);
+        AddRightMessage(name,message);
     }
     #endregion
 

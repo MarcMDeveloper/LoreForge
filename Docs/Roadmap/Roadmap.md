@@ -43,11 +43,11 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Design **dialogue manager** script  
 - ✅ Connect AI agent to dialogue manager 
 - ✅ Track player interactions in runtime 
-- Integrate AI-generated dialogue dynamically with memory  
-- Test dialogue adapting to player actions  
-- Implement **short-term memory** in NPC agent  
+- ✅ Implement **short-term memory** in NPC agent  
+- ✅ Test dialogue adapting to player actions 
+- Implement UI chat 
 
-- When close a conversation save as summart
+- When close a conversation save as summary
 - When open a conversation already started show summary of previous
 
 - Implement **NPC-to-NPC interaction system**  
