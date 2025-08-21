@@ -45,10 +45,11 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Track player interactions in runtime 
 - ✅ Implement **short-term memory** in NPC agent  
 - ✅ Test dialogue adapting to player actions 
-- Implement UI chat 
 
-- When close a conversation save as summary
-- When open a conversation already started show summary of previous
+- ✅ When agent start chat set previous summary to system prompt
+- ✅ When close a conversation save as summary
+- ✅ When open a conversation already started show summary of previous
+
 
 - Implement **NPC-to-NPC interaction system**  
 - Create the UI to see the text of the NPC dialogue with NPC
@@ -58,8 +59,15 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Debug and polish NPC interactions  
 - Full flow test
 
-- Design time
-- Art time
+- Design + art time
+- Refactor UI NPC to be in a grid and put some art on it
+- Refactor dialogues UI and put some art
+- Refactor UITooltip art and where it shows
+- Add some art to the NPC prefab
+- Add some art on the bubble chat prefab
+- Add some art to the chat canvas
+- Add some art on the dialogues view chat
+
 
 ---
 

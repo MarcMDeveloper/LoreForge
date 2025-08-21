@@ -78,6 +78,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
     public void OnClick()
     { 
         DialogueManager.Instance.StartChat(this);
+        agent.StartConversation("User");
     }
     // Future check wht does not work
     public void OnPointerClick(PointerEventData eventData)
@@ -90,6 +91,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
     public void OnPointerExit(PointerEventData eventData)
     {
         tooltip?.HideTooltip();
+        
     }
 
     public void SendPrompt(string message)

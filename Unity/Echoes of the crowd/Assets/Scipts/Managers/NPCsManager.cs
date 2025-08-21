@@ -39,7 +39,7 @@ public class NPCsManager : MonoBehaviour
     }
     #endregion
 
-    #region NPC Management functions
+    #region NPC Creation management functions
     public async void LoadNPCs()
     {
         NPCList npcList = await JsonLoader.LoadFromStreamingAssets(jsonFilePath);
@@ -120,4 +120,11 @@ public class NPCsManager : MonoBehaviour
         }
     }
     #endregion
+
+
+
+
+
 }
+
+

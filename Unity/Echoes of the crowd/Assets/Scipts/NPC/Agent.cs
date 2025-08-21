@@ -29,46 +29,177 @@ public class Choice
 {
     public OpenAIMessage message;
 }
+
+public class SummaryConversation
+{
+    public string otherName;
+    public string summary;
+}
 #endregion
 
 public class Agent
 {
     #region Variables
     private string systemPrompt;
+    private string character_name;
     private List<OpenAIMessage> conversation;
-    private List<string> conversationsSummary;
+    public List<SummaryConversation> conversationsSummary;
+    private string talkintToName;
 
     // DANGEROUS TAKE OUT OF HERE
-    private string apiKey = "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";
+    private string apiKey = "";
 
     // See if can be done different
     private static readonly HttpClient httpClient = new HttpClient();
     #endregion
 
 
-    public Agent(string sysPr)
+    public Agent(string sysPr, string characterName)
     {
+        character_name = characterName;
+
         // Save system for now (Check later if really need it)
         systemPrompt = sysPr;
 
-        //Debug.Log("Agent created with system prompt: " + systemPrompt);
+        // System prompt will be set later
+        conversationsSummary = new List<SummaryConversation>();
+    }
 
+    public void StartConversation(string Nameother)
+    {
+        // Add previous conversations
+        int length = conversationsSummary.Count;
+        string previousConversations = $@"
+        ### Past conversations ###
+
+        ";
+
+        for (int i = 0; i < length; i++)
+        {
+            previousConversations += $"\nCharacter = **{conversationsSummary[i].otherName}**: ";
+            previousConversations += $"{conversationsSummary[i].summary}\n";
+        }
+
+        Debug.Log($"Starting conversation with {Nameother}., previous conversations: {previousConversations}");
         // Create conversation and set up the first message
         conversation = new List<OpenAIMessage>();
         conversation.Add(new OpenAIMessage
         {
             role = "system",
-            content = systemPrompt
+            content = systemPrompt + previousConversations
         });
+
+        // Must know with wwho are talking for future summary
+        talkintToName = Nameother;
     }
 
+    // Reset chat
+    public async void FinishChat()
+    {
+        if (conversation == null || conversation.Count <2)
+        {
+            conversation.Clear();
+            talkintToName = null;
+            return;
+        }
+        // Take the conversation and send a request to the AI to summarize it
+        string summary = await SummarizeConversation();
+
+        bool found = false;
+
+        for(int i = 0; i < conversationsSummary.Count; i++)
+        {
+            if (conversationsSummary[i].otherName == talkintToName)
+            {
+                conversationsSummary[i].summary += "\n" + summary;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            conversationsSummary.Add(new SummaryConversation
+            {
+                otherName = talkintToName,
+                summary = summary
+            });
+        }
+
+        conversation.Clear();
+        talkintToName = null;
+    }
+
+    private async Task<string> SummarizeConversation()
+    {
+        // Build the conversation text (user + assistant only)
+        StringBuilder sb = new StringBuilder();
+        foreach (var msg in conversation)
+        {
+            if (msg.role == "user")
+                sb.AppendLine($"User: {msg.content}");
+            else if (msg.role == "assistant")
+                sb.AppendLine($"Assistant: {msg.content}");
+        }
+
+        var summarizeRequest = new OpenAIRequest
+        {
+            model = "gpt-4o-mini",
+            messages = new List<OpenAIMessage>
+            {
+                new OpenAIMessage
+                {
+                    role = "system",
+                    content = "Summarize the following conversation in 2-3 sentences. " +
+                            "Keep only important context that will help continue the discussion later."
+                },
+                new OpenAIMessage
+                {
+                    role = "user",
+                    content = sb.ToString()
+                }
+            }
+        };
+
+        string jsonBody = JsonConvert.SerializeObject(summarizeRequest);
+
+        using (var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions"))
+        {
+            request.Headers.Add("Authorization", $"Bearer {apiKey}");
+            request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.SendAsync(request);
+            string responseText = await response.Content.ReadAsStringAsync();
+
+            var parsed = JsonConvert.DeserializeObject<OpenAIResponse>(responseText);
+            return parsed?.choices?[0]?.message?.content ?? "No summary available.";
+        }
+    }
+    public string GetSummary(string nameOther)
+    {
+        int length = conversationsSummary.Count;
+        string output = "";
+
+        for (int i = 0; i < length; i++)
+        {
+            if (conversationsSummary[i].otherName == nameOther)
+            {
+                output = conversationsSummary[i].summary;
+                break;
+            }
+        }
+
+        return output;
+    }
+
+    #region Send Recive Prompts
     public async Task SendPrompt(string message)
     {
         await SendMessageToChatGPT(message);
     }
     private async Task SendMessageToChatGPT(string message)
     {
-         conversation.Add(new OpenAIMessage { role = "user", content = message });
+        conversation.Add(new OpenAIMessage { role = "user", content = message });
 
         var requestBody = new OpenAIRequest
         {
@@ -101,12 +232,8 @@ public class Agent
         conversation.Add(new OpenAIMessage { role = "assistant", content = answer });
 
         // Call DialogueManager to update the dialogue UI
-        DialogueManager.Instance.MessageRecived(answer);
+        DialogueManager.Instance.MessageRecived(character_name, answer);
     }
+    #endregion
 
-    // Reset chat
-    private void FinishChat()
-    { 
-        // Take the conversation and send a request to the AI to summarize it
-    }
 }

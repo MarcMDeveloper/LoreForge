@@ -10,6 +10,14 @@ public class DialogueManager : MonoBehaviour
     public GameObject ChatScreen;
     public TMP_InputField inputText;
     public List<NPC> npcsInChat;
+
+    public Transform contentTransform;  
+    public GameObject rightMessagePrefab;
+    public GameObject leftMessagePrefab;
+    public GameObject middleMessagePrefab;
+    public ScrollRect scrollRect;      
+
+    
     #endregion
 
     #region Singleton Setup
@@ -40,20 +48,17 @@ public class DialogueManager : MonoBehaviour
     }
     public void CloseChatScreen()
     {
+        EndChat();
         ChatScreen.SetActive(false);
     }
     #endregion
 
-    public Transform contentTransform;  // Drag the ScrollView Content here
-    public GameObject npcMessagePrefab;
-    public GameObject playerMessagePrefab;
-    public ScrollRect scrollRect;       // Reference to ScrollView itself
 
     #region Chat UI 
     // Add NPC message
     public void AddLeftMessage(string name, string message)
     {
-        GameObject newMessage = Instantiate(npcMessagePrefab, contentTransform);
+        GameObject newMessage = Instantiate(rightMessagePrefab, contentTransform);
         newMessage.GetComponent<ChatUIBehaviour>().AddLeftMessage(name,message);
         ScrollToBottom();
     }
@@ -61,11 +66,17 @@ public class DialogueManager : MonoBehaviour
     // Add Player message
     public void AddRightMessage(string name,string message)
     {
-        GameObject newMessage = Instantiate(playerMessagePrefab, contentTransform);
+        GameObject newMessage = Instantiate(leftMessagePrefab, contentTransform);
         newMessage.GetComponent<ChatUIBehaviour>().AddLeftMessage(name,message);
         ScrollToBottom();
     }
 
+    public void AddMiddleMessage(string message)
+    {
+        GameObject newMessage = Instantiate(middleMessagePrefab, contentTransform);
+        newMessage.GetComponent<ChatUIBehaviour>().AddMiddleMessage(message);
+        ScrollToBottom();
+    }
     // Keep scroll at bottom when new message appears
     private void ScrollToBottom()
     {
@@ -73,7 +84,7 @@ public class DialogueManager : MonoBehaviour
         scrollRect.verticalNormalizedPosition = 0f;
     }
     #endregion
-    
+
     #region Chat USER - NPC 
     public void StartChat(NPC npc)
     {
@@ -88,15 +99,32 @@ public class DialogueManager : MonoBehaviour
         // Add the NPC to the chat list
         npcsInChat.Add(npc);
 
+        // Add summmary if exist
+        string summary = npc.agent.GetSummary(npc.npc_name);
+        if (!string.IsNullOrEmpty(summary))
+        {
+            AddMiddleMessage($"**{npc.npc_name}**: {summary}");
+        }
+        else
+        {
+            AddMiddleMessage($"**{npc.npc_name}**: Let's start a conversation!");
+        }
+        
     }
 
     public void EndChat()
     {
-        // Close the chat screen
-        CloseChatScreen();
+        // Clear the chat history if needed        
+        // Tell the agent
+        npcsInChat[0].agent.FinishChat();
+        npcsInChat.Clear();
+        inputText.text = string.Empty;
 
-        // Clear the chat history if needed
-        // This could involve resetting UI elements or clearing data structures
+        // Erase all messages in the chat
+        foreach (Transform child in contentTransform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 
     public void SendMessage()
@@ -110,7 +138,8 @@ public class DialogueManager : MonoBehaviour
 
         npcsInChat[0].SendPrompt(currenMessage);
 
-        AddLeftMessage("User",currenMessage);               
+        AddLeftMessage("User",currenMessage);     
+        inputText.text = string.Empty;          
 
     }
     
@@ -121,11 +150,6 @@ public class DialogueManager : MonoBehaviour
     #endregion
 
     #region Chat load management
-    public void ClearChat()
-    {
-        npcsInChat.Clear();
-    }   
-
     public void LoadChat(int firstID, int secondID)
     {
         // Load the chat history between two NPCs
