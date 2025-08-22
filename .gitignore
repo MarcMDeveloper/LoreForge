@@ -76,3 +76,25 @@ crashlytics-build.properties
 /Unity/Echoes of the crowd/Library
 /Unity/Echoes of the crowd/Temp
 /Unity/Echoes of the crowd/UserSettings
+
+# API Key Security - Never commit API keys
+api_config.txt
+api_config_template.txt
+*.key
+*.env
+
+# Security Configuration Files
+*SecurityConfig.asset
+*security*.asset
+security_settings.json
+security_logs.txt
+
+# Unity Security Files
+*.security
+*.obfuscated
+*_secure.*
+
+# Development Security Files
+dev_keys.txt
+test_keys.txt
+sample_keys.txt

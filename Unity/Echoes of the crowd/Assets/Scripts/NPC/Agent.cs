@@ -46,8 +46,8 @@ public class Agent
     public List<SummaryConversation> conversationsSummary;
     private string talkintToName;
 
-    // DANGEROUS TAKE OUT OF HERE
-    private string apiKey = "";
+    // Secure API key management using PlayerPrefs with encryption
+    private string apiKey;
 
     // See if can be done different
     private static readonly HttpClient httpClient = new HttpClient();
@@ -63,7 +63,43 @@ public class Agent
 
         // System prompt will be set later
         conversationsSummary = new List<SummaryConversation>();
+        
+        // Initialize API key from secure storage
+        InitializeAPIKey();
     }
+
+    #region API Key Management
+    private void InitializeAPIKey()
+    {
+        if (APIKeyManager.Instance != null)
+        {
+            apiKey = APIKeyManager.Instance.GetAPIKey();
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                Debug.LogError("No API key found. Please set up the API key in APIKeyManager.");
+            }
+            else if (!APIKeyManager.Instance.ValidateAPIKeyFormat())
+            {
+                Debug.LogError("Invalid API key format. Please check your API key setup.");
+                apiKey = null;
+            }
+            else
+            {
+                Debug.Log("API key initialized successfully.");
+            }
+        }
+        else
+        {
+            Debug.LogError("APIKeyManager not found. Please ensure APIKeyManager is in the scene.");
+        }
+    }
+
+    public bool HasValidAPIKey()
+    {
+        return !string.IsNullOrEmpty(apiKey) && APIKeyManager.Instance != null && 
+               APIKeyManager.Instance.ValidateAPIKeyFormat();
+    }
+    #endregion
 
     #region Start/Finish Chat
     public void StartConversation(string Nameother)
@@ -208,6 +244,14 @@ public class Agent
     }
     private async Task SendMessageToChatGPT(string message)
     {
+        // Check if API key is valid before making request
+        if (!HasValidAPIKey())
+        {
+            Debug.LogError("No valid API key found. Please check your API key setup in APIKeyManager.");
+            ManageAnswer("Error: API key not configured. Please contact support.");
+            return;
+        }
+
         conversation.Add(new OpenAIMessage { role = "user", content = message });
 
         var requestBody = new OpenAIRequest
@@ -218,20 +262,34 @@ public class Agent
 
         string jsonBody = JsonConvert.SerializeObject(requestBody);
 
-        using (var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions"))
+        try
         {
-            request.Headers.Add("Authorization", $"Bearer {apiKey}");
-            request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            using (var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions"))
+            {
+                request.Headers.Add("Authorization", $"Bearer {apiKey}");
+                request.Content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
-            var response = await httpClient.SendAsync(request);
-            string responseText = await response.Content.ReadAsStringAsync();
+                var response = await httpClient.SendAsync(request);
+                string responseText = await response.Content.ReadAsStringAsync();
 
-            var parsed = JsonConvert.DeserializeObject<OpenAIResponse>(responseText);
-            string answer = parsed?.choices?[0]?.message?.content ?? "No response";
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.LogError($"API request failed: {response.StatusCode} - {responseText}");
+                    ManageAnswer($"Error: API request failed. Please check your API key and try again.");
+                    return;
+                }
 
-            conversation.Add(new OpenAIMessage { role = "assistant", content = answer });
+                var parsed = JsonConvert.DeserializeObject<OpenAIResponse>(responseText);
+                string answer = parsed?.choices?[0]?.message?.content ?? "No response";
 
-            ManageAnswer(answer);
+                conversation.Add(new OpenAIMessage { role = "assistant", content = answer });
+                ManageAnswer(answer);
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Error sending message to ChatGPT: {e.Message}");
+            ManageAnswer("Error: Unable to connect to OpenAI. Please check your internet connection and try again.");
         }
     }
 
