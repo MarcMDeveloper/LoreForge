@@ -15,11 +15,11 @@ public class DialogueManager : MonoBehaviour
     public GameObject rightMessagePrefab;
     public GameObject leftMessagePrefab;
     public GameObject middleMessagePrefab;
-    public ScrollRect scrollRect;      
+    public ScrollRect scrollRect;
 
-    
+
     #endregion
-
+  
     #region Singleton Setup
     public static DialogueManager Instance { get; private set; }
     private void Awake()
@@ -146,6 +146,73 @@ public class DialogueManager : MonoBehaviour
     public void MessageRecived(string name, string message)
     {
         AddRightMessage(name,message);
+    }
+    #endregion
+
+    #region Chat NPC - NPC
+    public void StartNPCtoNPCChat(NPC npcA, NPC npcB, string initialMessage)
+    {
+        OpenChatScreen();
+
+        npcsInChat.Clear();
+        npcsInChat.Add(npcA);
+        npcsInChat.Add(npcB);
+
+        // Start conversation for both
+        npcA.agent.StartConversation(npcB.npc_name);
+        npcB.agent.StartConversation(npcA.npc_name);
+
+        // Kick off with initial message from NPC A
+        AddLeftMessage(npcA.npc_name, initialMessage);
+        npcA.agent.SendPrompt(initialMessage);
+        Debug.Log($"Starting NPC-to-NPC chat between {npcA.npc_name} and {npcB.npc_name} with message: {initialMessage}");
+
+        // Then let NPC B reply
+        StartCoroutine(NPCtoNPCLoop(npcA, npcB));
+    }
+
+    private IEnumerator NPCtoNPCLoop(NPC npcA, NPC npcB)
+    {
+        NPC speaker = npcA;
+        NPC listener = npcB;
+
+        int exchanges = 0;
+        int maxExchanges = 6;
+
+        string firstMessage = "Hello, how are you today?";
+        AddLeftMessage(speaker.npc_name, firstMessage);
+        speaker.agent.SendPrompt(firstMessage);
+
+        yield return new WaitForSeconds(2f);
+
+        while (exchanges < maxExchanges)
+        {
+            // Get the last thing speaker said
+            string lastMessage = speaker.agent.GetLastMessage();
+
+            if (!string.IsNullOrEmpty(lastMessage))
+            {
+                // Show message on correct side
+                if (speaker == npcA)
+                    AddLeftMessage(speaker.npc_name, lastMessage);
+                else
+                    AddRightMessage(speaker.npc_name, lastMessage);
+
+                // Tell the other NPC what was just said (with speaker name!)
+                string formatted = $"{speaker.npc_name} said: {lastMessage}";
+                listener.agent.SendPrompt(formatted);
+            }
+
+            // Swap turns
+            NPC temp = speaker;
+            speaker = listener;
+            listener = temp;
+
+            exchanges++;
+            yield return new WaitForSeconds(2f);
+        }
+
+        AddMiddleMessage("Conversation ended.");
     }
     #endregion
 

@@ -39,6 +39,12 @@ public class NPCsManager : MonoBehaviour
     }
     #endregion
 
+    private void Update()
+    {
+        // For testing purposes only
+        if (Input.GetKeyDown(KeyCode.L))
+            DialogueManager.Instance.StartNPCtoNPCChat(npcs[0], npcs[1], "Hello, whats your name? And what are your last news?");
+    }
     #region NPC Creation management functions
     public async void LoadNPCs()
     {

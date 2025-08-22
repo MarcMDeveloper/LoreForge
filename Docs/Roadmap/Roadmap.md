@@ -36,6 +36,8 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Create Agent constructor and a basic update separate in functions
 - ✅ Implement the different functions
 - ✅ Improve **behavior logic** based on personality traits (risk-averse, friendly, etc.)  
+
+
 ---
 
 ## **Week 2 – Enhancing Agent Memory & Behavior NPC to NPC**
@@ -50,14 +52,13 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ When close a conversation save as summary
 - ✅ When open a conversation already started show summary of previous
 
-
-- Implement **NPC-to-NPC interaction system**  
-- Create the UI to see the text of the NPC dialogue with NPC
-- Test multiple agents in scene  
-- Debug system prompts for AI dialogue  
-
+- ✅ Implement **NPC-to-NPC interaction system**  
+- ✅ Set start the conversation of the two NPC
+- Choose randomly two NPC to speak
+- Save the dialogue when finish
+- Load and show the dialogue
+- Debug system prompts for AI dialogue to provide a better behaviour
 - Debug and polish NPC interactions  
-- Full flow test
 
 - Design + art time
 - Refactor UI NPC to be in a grid and put some art on it
