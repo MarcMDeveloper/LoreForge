@@ -65,6 +65,7 @@ public class Agent
         conversationsSummary = new List<SummaryConversation>();
     }
 
+    #region Start/Finish Chat
     public void StartConversation(string Nameother)
     {
         // Add previous conversations
@@ -129,7 +130,14 @@ public class Agent
         conversation.Clear();
         talkintToName = null;
     }
+    public string GetLastMessage()
+    {
+        if (conversation == null || conversation.Count == 1) return null;
+        return conversation[conversation.Count - 1].content;
+    }
+    #endregion
 
+    #region Summarize Conversation
     private async Task<string> SummarizeConversation()
     {
         // Build the conversation text (user + assistant only)
@@ -191,6 +199,7 @@ public class Agent
 
         return output;
     }
+    #endregion
 
     #region Send Recive Prompts
     public async Task SendPrompt(string message)
