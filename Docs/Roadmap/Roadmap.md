@@ -17,44 +17,58 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Create NPC constructor for callling it from the NPCs manager and the json loader
 
 - ✅ Set up the singleton managers (`JsonLoader`, `NPCManager`, `DialogueManager`)
-- ✅ Implement JSON loader for NPCs
+- ✅ Implement JSON loader for NPCs, static
 - ✅ Implement `NPC manager` as singleton that can read NPCs JSON  
 - ✅ Debug data loading  
 
 - ✅ NPC creation with basic prefab
 - ✅ Create the UI to see the the different NPC selection with images
 - ✅ Implement the NPCManager to show the different NPCs in the screen
+- ✅ Set up the prefab for showing data
 - ✅ Implement OnHover function that shows the data
 - ✅ Set a mock up onPress for future dialogue manager call
 
-- Implement **basic AI agent class**
-- Create Agent constructor and a basic update
+- ✅ Create the Base Chat Canvas and add a Scroll View for Messages
+- ✅ Create Message Prefabs
+- ✅ Add the Input Bar, Set Anchors & Auto-Layout and Sorting & Visibility
 
-- Design **dialogue manager** script  
-- Connect AI agent to dialogue manager 
-- Create the UI to see the text of the NPC dialogue with user
-- Implement **player-to-NPC greeting**  
+- ✅ Set next input as function to send answer and show the text
+- ✅ Create Agent constructor and a basic update separate in functions
+- ✅ Implement the different functions
+- ✅ Improve **behavior logic** based on personality traits (risk-averse, friendly, etc.)  
+
 
 ---
 
 ## **Week 2 – Enhancing Agent Memory & Behavior NPC to NPC**
 
-- Implement **NPC-to-NPC interaction system**  
-- Create the UI to see the text of the NPC dialogue with NPC
-- Test multiple agents in scene  
-- Debug system prompts for AI dialogue  
+- ✅ Design **dialogue manager** script  
+- ✅ Connect AI agent to dialogue manager 
+- ✅ Track player interactions in runtime 
+- ✅ Implement **short-term memory** in NPC agent  
+- ✅ Test dialogue adapting to player actions 
 
-- Implement **short-term memory** in NPC agent  
-- Track player interactions in runtime  
+- ✅ When agent start chat set previous summary to system prompt
+- ✅ When close a conversation save as summary
+- ✅ When open a conversation already started show summary of previous
 
-- Improve **behavior logic** based on personality traits (risk-averse, friendly, etc.)  
-- Create simple decision-making examples  
-
-- Integrate AI-generated dialogue dynamically with memory  
-- Test dialogue adapting to player actions  
-
+- ✅ Implement **NPC-to-NPC interaction system**  
+- ✅ Set start the conversation of the two NPC
+- Choose randomly two NPC to speak
+- Save the dialogue when finish
+- Load and show the dialogue
+- Debug system prompts for AI dialogue to provide a better behaviour
 - Debug and polish NPC interactions  
-- Optimize agent update loops and dialogue triggers  
+
+- Design + art time
+- Refactor UI NPC to be in a grid and put some art on it
+- Refactor dialogues UI and put some art
+- Refactor UITooltip art and where it shows
+- Add some art to the NPC prefab
+- Add some art on the bubble chat prefab
+- Add some art to the chat canvas
+- Add some art on the dialogues view chat
+
 
 ---
 
@@ -84,6 +98,9 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Music changes depending of the tone of conversation (positive/negative)
 - Main Menu detects if there is money in OPEN AI before allowing to continue the game
 - Saves data from user as jsons so works when returns
+- Search and implement some art
+- Load json an images from drive with specific links to avoid using the same of the build.
+- Look security aki key
 
 ### 📝 Notes
 - **Weeks 1–2** focus on Unity-based agent creation, dialogue, and behavior.
