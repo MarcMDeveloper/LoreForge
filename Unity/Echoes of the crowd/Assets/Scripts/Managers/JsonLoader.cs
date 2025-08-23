@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
@@ -63,14 +62,12 @@ public static class JsonLoader
 
             if (request.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"Failed to load NPCs from StreamingAssets: {request.error}");
                 return null;
             }
 
             string jsonText = "{ \"npcs\": " + request.downloadHandler.text + " }";
             NPCList npcList = JsonUtility.FromJson<NPCList>(jsonText);
             
-            Debug.Log($"Successfully loaded {npcList?.npcs?.Length ?? 0} NPCs from StreamingAssets");
             return npcList;
         }
     }

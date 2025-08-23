@@ -93,7 +93,7 @@ public class NPCTooltip : MonoBehaviour
                $"<b><color=#{labelColorHex}>Traits:</color></b> <color=#{valueColorHex}>{FormatTraits(npcData.traits)}</color>\n" +
                $"<b><color=#{labelColorHex}>Goal:</color></b> <color=#{valueColorHex}>{TruncateText(npcData.goal, 50)}</color>\n" +
                $"<b><color=#{labelColorHex}>Occupation:</color></b> <color=#{valueColorHex}>{npcData.occupation}</color>\n" +
-               $"<b><color=#{labelColorHex}>History:</color></b> <color=#{valueColorHex}>{TruncateText(npcData.briefHistory, 100)}</color>";
+               $"<b><color=#{labelColorHex}>History:</color></b> <color=#{valueColorHex}>{TruncateText(npcData.briefHistory, 300)}</color>";
     }
     
     private string FormatTraits(List<string> traits)

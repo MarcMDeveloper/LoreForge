@@ -9,271 +9,285 @@ using TMPro;
 public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
     #region Fields
-    [Header("Loaded data")]
-    public Agent agent;
-    public string id;
-    public string npc_name;
-    public string gender;
-    public int age;
-    public string culture;
-
-    public NPC_Appearance appearance;
-    public NPC_Personality personality;
-    public List<string> traits;
-    public string briefHistory;
-    public string portraitPath;
-    public string goal;
-    public string occupation;
+    [Header("NPC Data")]
+    [SerializeField] private NPCData data;
     
     [Header("UI Components")]
     public Image portraitImage;       
     public TMP_Text nameText;
 
-    // WebGL optimization: Cache tooltip reference
-    private static NPCTooltip cachedTooltip;
-    private bool isInitialized = false;
+    // Memory management: Static tooltip reference
+    private static NPCTooltip tooltipInstance;
+    private static readonly Dictionary<string, string> promptCache = new Dictionary<string, string>();
     
-    // WebGL optimization: Cache system prompt
-    private string cachedSystemPrompt;
+    private bool isInitialized = false;
+    private float lastClickTime;
+    private const float CLICK_COOLDOWN = 0.5f;
 
     #endregion
 
     #region Initialization
-    public void Initialize(string id, string npc_name, string gender, int age, string culture,
-            NPC_Appearance appearance,
-            NPC_Personality personality,
-            List<string> traits, string briefHistory, string portraitPath, string goals, string occupation)
+    public void Initialize(NPCData npcData)
     {
-        // Assign values to the NPC fields
-        this.id = id;
-        this.npc_name = npc_name;
-        this.gender = gender;
-        this.age = age;
-        this.culture = culture;
-        this.appearance = appearance;
-        this.personality = personality;
-        this.traits = traits ?? new List<string>();
-        this.briefHistory = briefHistory;
-        this.portraitPath = portraitPath;
-        this.goal = goals;
-        this.occupation = occupation;
-
-        // WebGL optimization: Cache tooltip reference once
-        if (cachedTooltip == null)
-        {
-            cachedTooltip = FindFirstObjectByType<NPCTooltip>();
-        }
-
-        // Initialize the agent for this NPC
+        // Error handling and validation
+        if (npcData == null) return;
+        if (string.IsNullOrEmpty(npcData.id)) return;
+        if (npcData.personality.openness < 0f || npcData.personality.openness > 1f) return;
+        if (npcData.personality.conscientiousness < 0f || npcData.personality.conscientiousness > 1f) return;
+        if (npcData.personality.extraversion < 0f || npcData.personality.extraversion > 1f) return;
+        if (npcData.personality.agreeableness < 0f || npcData.personality.agreeableness > 1f) return;
+        if (npcData.personality.neuroticism < 0f || npcData.personality.neuroticism > 1f) return;
+        
+        data = npcData;
         CreateAgent();
-
-        // Set the name text
-        if (nameText != null)
-        {
-            nameText.text = npc_name;
-        }
-
+        UpdateUI();
         isInitialized = true;
+    }
+
+    private void Start()
+    {
+        // Memory management: Static tooltip reference
+        if (tooltipInstance == null)
+            tooltipInstance = FindFirstObjectByType<NPCTooltip>();
+    }
+
+    private void UpdateUI()
+    {
+        if (nameText != null && data != null && !string.IsNullOrEmpty(data.name))
+        {
+            nameText.text = data.name;
+        }
+        
+        if (portraitImage != null && data != null && !string.IsNullOrEmpty(data.portrait))
+        {
+            StartCoroutine(LoadPortraitSafely(data.portrait));
+        }
+    }
+
+    private IEnumerator LoadPortraitSafely(string portraitPath)
+    {
+        if (string.IsNullOrEmpty(portraitPath) || portraitImage == null)
+            yield break;
+        
+        // Try to load portrait from Resources
+        var portraitSprite = Resources.Load<Sprite>(portraitPath);
+        if (portraitSprite != null)
+        {
+            portraitImage.sprite = portraitSprite;
+            portraitImage.gameObject.SetActive(true);
+        }
+        else
+        {
+            // If no portrait found, hide the portrait image
+            portraitImage.gameObject.SetActive(false);
+        }
+        
+        yield return null;
     }
     #endregion
 
     #region Unity Events
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!isInitialized) return;
-        cachedTooltip?.ShowTooltip(this, GetComponent<RectTransform>());
+        if (!isInitialized || tooltipInstance == null || eventData == null) return;
+        tooltipInstance.ShowTooltip(this, GetComponent<RectTransform>());
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (!isInitialized) return;
+        if (!isInitialized || eventData == null) return;
         
-        Debug.Log($"NPC clicked: {npc_name}");
+        // UI responsiveness: Click cooldown
+        if (Time.time - lastClickTime < CLICK_COOLDOWN)
+            return;
+        
+        lastClickTime = Time.time;
 
         // Call the dialogue manager to start a conversation
-        DialogueManager.Instance.StartChat(this);
+        if (DialogueManager.Instance != null)
+        {
+            DialogueManager.Instance.StartChat(this);
+        }
         
-        // WebGL optimization: Start conversation asynchronously
+        // Async pattern: Start conversation asynchronously
         if (agent != null)
         {
             StartCoroutine(StartConversationAsync());
         }
     }
 
-    private System.Collections.IEnumerator StartConversationAsync()
+    private IEnumerator StartConversationAsync()
     {
-        // WebGL optimization: Yield to prevent blocking
         yield return null;
-        agent.StartConversation("User");
+        if (agent != null)
+            agent.StartConversation("User");
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (!isInitialized) return;
-        cachedTooltip?.HideTooltip();
+        if (!isInitialized || tooltipInstance == null || eventData == null) return;
+        tooltipInstance.HideTooltip();
     }
 
     public void SendPrompt(string message)
     {
-        if (!isInitialized || agent == null) return;
+        if (!isInitialized || agent == null || string.IsNullOrEmpty(message)) return;
         
-        // WebGL optimization: Send prompt asynchronously
+        // Async pattern: Send prompt asynchronously
         StartCoroutine(SendPromptAsync(message));
     }
 
-    private System.Collections.IEnumerator SendPromptAsync(string message)
+    private IEnumerator SendPromptAsync(string message)
     {
         yield return null;
-        _ = agent.SendPrompt(message);
+        if (agent != null && !string.IsNullOrEmpty(message))
+            _ = agent.SendPrompt(message);
     }
     #endregion
 
     #region Helper Functions
     public void CreateAgent()
     {
-        // WebGL optimization: Cache system prompt
-        if (string.IsNullOrEmpty(cachedSystemPrompt))
-        {
-            cachedSystemPrompt = CreateSystemPrompt();
-        }
+        if (data == null) return;
         
-        // Create a new agent with the cached system prompt
-        agent = new Agent(cachedSystemPrompt, npc_name);
+        string systemPrompt = GetCachedSystemPrompt();
+        agent = new Agent(systemPrompt, data.name);
     }
 
+    // Memory management: Static prompt caching
+    private string GetCachedSystemPrompt()
+    {
+        if (data == null) return string.Empty;
+        
+        if (promptCache.TryGetValue(data.id, out string cachedPrompt))
+            return cachedPrompt;
+        
+        string prompt = CreateSystemPrompt();
+        promptCache[data.id] = prompt;
+        return prompt;
+    }
+
+    // Performance optimization: StringBuilder for prompt generation
     private string CreateSystemPrompt()
     {
-        return
-        $@"### NPC Role Definition ###
-        You are roleplaying as a game NPC. Stay in character at all times.
-
-        **ID:** {id}  
-        **Name:** {npc_name}  
-        **Gender:** {gender}  
-        **Age:** {age}  
-        **Culture:** {culture}  
-        **Occupation:** {occupation}  
-        **Goal:** {goal}  
-
-        ### Appearance ###
-        **Hair Color:** {appearance?.hair_color ?? "Unknown"}  
-        **Eye Color:** {appearance?.eye_color ?? "Unknown"}  
-        **Height:** {appearance?.height_cm ?? 0} cm  
-        **Build:** {appearance?.build ?? "Average"}  
-
-        ### Personality Traits (Big Five) ###
-        **Openness:** {personality.openness}  
-        **Conscientiousness:** {personality.conscientiousness}  
-        **Extraversion:** {personality.extraversion}  
-        **Agreeableness:** {personality.agreeableness}  
-        **Neuroticism:** {personality.neuroticism}  
-
-        ### Distinctive Traits ###
-        - {string.Join("\n- ", traits ?? new List<string>())}
-
-        ### Backstory ###
-        {briefHistory ?? "No backstory available."}
-
-        ---
-
-        ### Behavioral Rules ###
-        - Always stay in character as **{npc_name}**.  
-        - Keep responses **short (under 100 tokens)** and natural, like real dialogue.  
-        - Respond according to personality, backstory, and traits.  
-        - Use aggression only if it fits your personality when user is hostile.  
-        - Do **not break character** or mention being an AI.
-        - If detect entering in a loop, subtly change topic or ask a question to move conversation forward.
-        - If you don't know something, respond with uncertainty or deflect.
-        - If no topic, try to relate to your goals, traits, or backstory.
-        - Avoid repetitive phrases or sentence structures.
-
-        ### Conversation Style Guidelines ###
-        {CreateStyleHints()}
-        ";
+        if (data == null) return string.Empty;
+        
+        var sb = new System.Text.StringBuilder(2000);
+        
+        sb.AppendLine("### NPC Role Definition ###");
+        sb.AppendLine("You are roleplaying as a game NPC. Stay in character at all times.");
+        sb.AppendLine();
+        sb.AppendLine($"**ID:** {data.id}");
+        sb.AppendLine($"**Name:** {data.name}");
+        sb.AppendLine($"**Gender:** {data.gender}");
+        sb.AppendLine($"**Age:** {data.age}");
+        sb.AppendLine($"**Culture:** {data.culture}");
+        sb.AppendLine($"**Occupation:** {data.occupation}");
+        sb.AppendLine($"**Goal:** {data.goal}");
+        sb.AppendLine();
+        
+        sb.AppendLine("### Appearance ###");
+        if (data.appearance != null)
+        {
+            sb.AppendLine($"**Hair Color:** {data.appearance.hair_color ?? "Unknown"}");
+            sb.AppendLine($"**Eye Color:** {data.appearance.eye_color ?? "Unknown"}");
+            sb.AppendLine($"**Height:** {data.appearance.height_cm} cm");
+            sb.AppendLine($"**Build:** {data.appearance.build ?? "Average"}");
+        }
+        else
+        {
+            sb.AppendLine("**Appearance:** Unknown");
+        }
+        sb.AppendLine();
+        
+        sb.AppendLine("### Personality Traits (Big Five) ###");
+        sb.AppendLine($"**Openness:** {data.personality.openness}");
+        sb.AppendLine($"**Conscientiousness:** {data.personality.conscientiousness}");
+        sb.AppendLine($"**Extraversion:** {data.personality.extraversion}");
+        sb.AppendLine($"**Agreeableness:** {data.personality.agreeableness}");
+        sb.AppendLine($"**Neuroticism:** {data.personality.neuroticism}");
+        sb.AppendLine();
+        
+        sb.AppendLine("### Distinctive Traits ###");
+        if (data.traits != null && data.traits.Count > 0)
+        {
+            foreach (string trait in data.traits)
+            {
+                sb.AppendLine($"- {trait}");
+            }
+        }
+        else
+        {
+            sb.AppendLine("- None");
+        }
+        sb.AppendLine();
+        
+        sb.AppendLine("### Backstory ###");
+        sb.AppendLine(data.brief_history ?? "No backstory available.");
+        sb.AppendLine();
+        sb.AppendLine("---");
+        sb.AppendLine();
+        
+        sb.AppendLine("### Behavioral Rules ###");
+        sb.AppendLine($"- Always stay in character as **{data.name}**.");
+        sb.AppendLine("- Keep responses **short (under 100 tokens)** and natural, like real dialogue.");
+        sb.AppendLine("- Respond according to personality, backstory, and traits.");
+        sb.AppendLine("- Use aggression only if it fits your personality when user is hostile.");
+        sb.AppendLine("- Do **not break character** or mention being an AI.");
+        sb.AppendLine("- If detect entering in a loop, subtly change topic or ask a question to move conversation forward.");
+        sb.AppendLine("- If you don't know something, respond with uncertainty or deflect.");
+        sb.AppendLine("- If no topic, try to relate to your goals, traits, or backstory.");
+        sb.AppendLine("- Avoid repetitive phrases or sentence structures.");
+        sb.AppendLine();
+        
+        sb.AppendLine("### Conversation Style Guidelines ###");
+        sb.Append(CreateStyleHints());
+        
+        return sb.ToString();
     }
 
     private string CreateStyleHints()
     {
-        // WebGL optimization: Use string builder pattern for better performance
+        if (data == null) return string.Empty;
+        
         var styleHints = new System.Text.StringBuilder();
-
-        styleHints.AppendLine(personality.openness >= 0.6f ? 
+        
+        styleHints.AppendLine(data.personality.openness >= 0.6f ? 
             "- **Openness:** imaginative, curious, and open to new ideas." : 
             "- **Openness:** practical, concrete, and prefers routine.");
             
-        styleHints.AppendLine(personality.conscientiousness >= 0.6f ? 
+        styleHints.AppendLine(data.personality.conscientiousness >= 0.6f ? 
             "- **Conscientiousness:** structured, careful, and reliable." : 
             "- **Conscientiousness:** spontaneous, casual, and informal.");
             
-        styleHints.AppendLine(personality.extraversion >= 0.6f ? 
+        styleHints.AppendLine(data.personality.extraversion >= 0.6f ? 
             "- **Extraversion:** energetic, talkative, engages actively." : 
             "- **Extraversion:** reserved, quiet, short replies.");
             
-        styleHints.AppendLine(personality.agreeableness >= 0.6f ? 
+        styleHints.AppendLine(data.personality.agreeableness >= 0.6f ? 
             "- **Agreeableness:** kind, empathetic, cooperative." : 
             "- **Agreeableness:** blunt, self-focused, argumentative if needed.");
             
-        styleHints.AppendLine(personality.neuroticism >= 0.6f ? 
+        styleHints.AppendLine(data.personality.neuroticism >= 0.6f ? 
             "- **Neuroticism:** emotional, slightly anxious or reactive." : 
             "- **Neuroticism:** calm, steady, confident.");
 
         return styleHints.ToString();
     }
 
-    // WebGL optimization: Cleanup method for object pooling
-    public void ResetForPool()
-    {
-        isInitialized = false;
-        cachedSystemPrompt = null;
-        
-        if (agent != null)
-        {
-            // Clean up agent resources if needed
-            agent = null;
-        }
-        
-        if (nameText != null)
-        {
-            nameText.text = "";
-        }
-    }
-    #endregion
-
-    #region Nested Classes 
-    [System.Serializable]
-    public class NPC_Appearance
-    {
-        public NPC_Appearance(string hairColor, string eyeColor, int heightCm, string build)
-        {
-            this.hair_color = hairColor;
-            this.eye_color = eyeColor;
-            this.height_cm = heightCm;
-            this.build = build;
-        }
-
-        public string hair_color;
-        public string eye_color;
-        public int height_cm;
-        public string build;
-    }
-
-    [System.Serializable]
-    public struct NPC_Personality
-    {
-        public NPC_Personality(float openness, float conscientiousness, float extraversion, float agreeableness, float neuroticism)
-        {
-            this.openness = openness;
-            this.conscientiousness = conscientiousness;
-            this.extraversion = extraversion;
-            this.agreeableness = agreeableness;
-            this.neuroticism = neuroticism;
-        }   
-
-        [Range(0f, 1f)] public float openness;
-        [Range(0f, 1f)] public float conscientiousness;
-        [Range(0f, 1f)] public float extraversion;
-        [Range(0f, 1f)] public float agreeableness;
-        [Range(0f, 1f)] public float neuroticism;
-    }
+    // Public properties for backward compatibility
+    public string id => data?.id ?? string.Empty;
+    public string npc_name => data?.name ?? string.Empty;
+    public string gender => data?.gender ?? string.Empty;
+    public int age => data?.age ?? 0;
+    public string culture => data?.culture ?? string.Empty;
+    public NPC_Appearance appearance => data?.appearance;
+    public NPC_Personality personality => data?.personality ?? default;
+    public List<string> traits => data?.traits;
+    public string briefHistory => data?.brief_history ?? string.Empty;
+    public string portraitPath => data?.portrait ?? string.Empty;
+    public string goal => data?.goal ?? string.Empty;
+    public string occupation => data?.occupation ?? string.Empty;
+    public Agent agent { get; private set; }
     #endregion
 }

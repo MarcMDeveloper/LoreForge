@@ -62,8 +62,7 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Refactor UI NPC to be in a grid and put some art on it
 - ✅ Add some art to the NPC prefab
 - ✅ Refactor `JsonLoader`, `NPCManager`, `NPC`
-- ✅ Refactor UITooltip art 
-- ✅ Refactor UITooltip design
+- ✅ Refactor `UITooltip` art, refactor + design
 
 - Refactor dialogues UI and put some art
 - Add some art on the bubble chat prefab

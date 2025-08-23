@@ -108,8 +108,7 @@ public class DialogueManager : MonoBehaviour
         else
         {
             AddMiddleMessage($"**{npc.npc_name}**: Let's start a conversation!");
-        }
-        
+        }        
     }
 
     public void EndChat()

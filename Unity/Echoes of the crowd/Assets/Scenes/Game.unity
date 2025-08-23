@@ -1109,7 +1109,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 662987937}
   m_HandleRect: {fileID: 662987936}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -1867,7 +1867,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1639902067}
   m_HandleRect: {fileID: 1639902066}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2255,7 +2255,14 @@ MonoBehaviour:
   portraitImage: {fileID: 1718170414}
   nameText: {fileID: 1296740535}
   detailsText: {fileID: 22954031}
-  offset: {x: 150, y: -100}
+  fadeInDuration: 0.3
+  fadeOutDuration: 0.2
+  nameTextColor: {r: 1, g: 1, b: 1, a: 1}
+  labelColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  valueColor: {r: 1, g: 1, b: 1, a: 1}
+  backgroundColor: {r: 0.1, g: 0.1, b: 0.1, a: 0.9}
+  nameFontSize: 18
+  detailsFontSize: 14
 --- !u!1 &1671486706
 GameObject:
   m_ObjectHideFlags: 0
@@ -2929,6 +2936,10 @@ PrefabInstance:
       value: 1.2618217
       objectReference: {fileID: 0}
     - target: {fileID: 1867794887835936810, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1867794887835936810, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
       objectReference: {fileID: 0}
@@ -2970,7 +2981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4147795171780338856, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4177849084271790606, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3063,6 +3074,18 @@ PrefabInstance:
     - target: {fileID: 6373899352640103990, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529547761699079213, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
+      propertyPath: m_fontSize
+      value: 12.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529547761699079213, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529547761699079213, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6529547761699079213, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
