@@ -83,10 +83,6 @@ public class Agent
                 Debug.LogError("Invalid API key format. Please check your API key setup.");
                 apiKey = null;
             }
-            else
-            {
-                Debug.Log("API key initialized successfully.");
-            }
         }
         else
         {
@@ -117,7 +113,7 @@ public class Agent
             previousConversations += $"{conversationsSummary[i].summary}\n";
         }
 
-        Debug.Log($"Starting conversation with {Nameother}., previous conversations: {previousConversations}");
+
         // Create conversation and set up the first message
         conversation = new List<OpenAIMessage>();
         conversation.Add(new OpenAIMessage

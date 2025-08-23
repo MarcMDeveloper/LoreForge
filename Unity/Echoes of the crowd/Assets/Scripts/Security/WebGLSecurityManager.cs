@@ -96,7 +96,7 @@ public class WebGLSecurityManager : MonoBehaviour
             ObfuscateCriticalStrings();
         }
 #if UNITY_EDITOR
-        Debug.Log("WebGL Security Manager initialized");
+
 #endif
     }
 
