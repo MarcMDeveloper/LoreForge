@@ -54,16 +54,15 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 
 - ✅ Implement **NPC-to-NPC interaction system**  
 - ✅ Set start the conversation of the two NPC
-- Choose randomly two NPC to speak
+- ✅ Choose randomly two NPC to speak
 - Save the dialogue when finish
 - Load and show the dialogue
-- Debug system prompts for AI dialogue to provide a better behaviour
-- Debug and polish NPC interactions  
 
-- Design + art time
-- Refactor UI NPC to be in a grid and put some art on it
-- Refactor dialogues UI and put some art
+- ✅ **Design + art time**
+- ✅ Refactor UI NPC to be in a grid and put some art on it
 - Refactor UITooltip art and where it shows
+
+- Refactor dialogues UI and put some art
 - Add some art to the NPC prefab
 - Add some art on the bubble chat prefab
 - Add some art to the chat canvas

@@ -5,7 +5,7 @@ using UnityEngine;
 public class NPCsManager : MonoBehaviour
 {
     #region Fields
-    public Canvas npcCanvas;
+    public GameObject npcCanvas;
     public GameObject npcPrefab; // Prefab for the NPC
     public List<NPC> npcs; // List to hold all NPCs in the game
     private string jsonFilePath = "NPC/NPCs.json";
