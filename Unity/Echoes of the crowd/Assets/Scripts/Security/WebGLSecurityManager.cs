@@ -19,7 +19,7 @@ public class WebGLSecurityManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = FindObjectOfType<WebGLSecurityManager>();
+                instance = FindAnyObjectByType<WebGLSecurityManager>();
                 if (instance == null)
                 {
                     GameObject go = new GameObject("WebGLSecurityManager");
@@ -95,8 +95,9 @@ public class WebGLSecurityManager : MonoBehaviour
         {
             ObfuscateCriticalStrings();
         }
-
+#if UNITY_EDITOR
         Debug.Log("WebGL Security Manager initialized");
+#endif
     }
 
     /// <summary>

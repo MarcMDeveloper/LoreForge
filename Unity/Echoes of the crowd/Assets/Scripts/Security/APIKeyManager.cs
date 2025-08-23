@@ -22,7 +22,7 @@ public class APIKeyManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = FindObjectOfType<APIKeyManager>();
+                instance = FindAnyObjectByType<APIKeyManager>();
                 if (instance == null)
                 {
                     GameObject go = new GameObject("APIKeyManager");
