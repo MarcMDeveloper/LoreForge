@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 using System.Threading.Tasks;
 
 #region NPCs Serializer Classes
@@ -27,6 +26,7 @@ public class NPCData
     public string goal;
     public string occupation;
 }
+
 [System.Serializable]
 public class NPC_Appearance
 {
@@ -35,6 +35,7 @@ public class NPC_Appearance
     public int height_cm;
     public string build;
 }
+
 [System.Serializable]
 public struct NPC_Personality
 {
@@ -52,25 +53,25 @@ public static class JsonLoader
     {
         string fullPath = System.IO.Path.Combine(Application.streamingAssetsPath, filePath);
         
-        using (UnityWebRequest request = UnityWebRequest.Get(fullPath))
+        using (var request = new UnityEngine.Networking.UnityWebRequest(fullPath))
         {
+            request.downloadHandler = new UnityEngine.Networking.DownloadHandlerBuffer();
             var operation = request.SendWebRequest();
 
             while (!operation.isDone)
                 await Task.Yield();
 
-            if (request.result != UnityWebRequest.Result.Success)
+            if (request.result != UnityEngine.Networking.UnityWebRequest.Result.Success)
             {
-                Debug.LogError("Failed to load NPCs: " + request.error);
+                Debug.LogError($"Failed to load NPCs from StreamingAssets: {request.error}");
                 return null;
             }
 
-            // Wrap JSON array in object for JsonUtility
             string jsonText = "{ \"npcs\": " + request.downloadHandler.text + " }";
-
             NPCList npcList = JsonUtility.FromJson<NPCList>(jsonText);
+            
+            Debug.Log($"Successfully loaded {npcList?.npcs?.Length ?? 0} NPCs from StreamingAssets");
             return npcList;
         }
     }
-
 }

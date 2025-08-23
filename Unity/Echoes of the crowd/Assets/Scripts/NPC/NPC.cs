@@ -5,13 +5,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 
-
 [System.Serializable]
-public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IPointerExitHandler
+public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler
 {
     #region Fields
     [Header("Loaded data")]
-    // Saved data
     public Agent agent;
     public string id;
     public string npc_name;
@@ -27,13 +25,16 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
     public string goal;
     public string occupation;
     
-    [Header("UI related")]
-    // UI related fields
+    [Header("UI Components")]
     public Image portraitImage;       
     public TMP_Text nameText;
 
-    // Tooltip reference
-    private NPCTooltip tooltip;
+    // WebGL optimization: Cache tooltip reference
+    private static NPCTooltip cachedTooltip;
+    private bool isInitialized = false;
+    
+    // WebGL optimization: Cache system prompt
+    private string cachedSystemPrompt;
 
     #endregion
 
@@ -51,63 +52,95 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         this.culture = culture;
         this.appearance = appearance;
         this.personality = personality;
-        this.traits = traits;
+        this.traits = traits ?? new List<string>();
         this.briefHistory = briefHistory;
         this.portraitPath = portraitPath;
         this.goal = goals;
         this.occupation = occupation;
 
+        // WebGL optimization: Cache tooltip reference once
+        if (cachedTooltip == null)
+        {
+            cachedTooltip = FindFirstObjectByType<NPCTooltip>();
+        }
+
         // Initialize the agent for this NPC
         CreateAgent();
 
-        tooltip = FindFirstObjectByType<NPCTooltip>();
+        // Set the name text
+        if (nameText != null)
+        {
+            nameText.text = npc_name;
+        }
 
-        // Set the sprite and the name
-        // Sprite portraitSprite = Resources.Load<Sprite>(npcData.portraitPath);
-        nameText.text = npc_name;
-
+        isInitialized = true;
     }
     #endregion
 
     #region Unity Events
     public void OnPointerEnter(PointerEventData eventData)
     {
-        tooltip?.ShowTooltip(this, GetComponent<RectTransform>());
+        if (!isInitialized) return;
+        cachedTooltip?.ShowTooltip(this, GetComponent<RectTransform>());
     }
 
-    public void OnClick()
-    { 
-        DialogueManager.Instance.StartChat(this);
-        agent.StartConversation("User");
-    }
-    // Future check wht does not work
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (!isInitialized) return;
+        
         Debug.Log($"NPC clicked: {npc_name}");
 
         // Call the dialogue manager to start a conversation
         DialogueManager.Instance.StartChat(this);
+        
+        // WebGL optimization: Start conversation asynchronously
+        if (agent != null)
+        {
+            StartCoroutine(StartConversationAsync());
+        }
     }
+
+    private System.Collections.IEnumerator StartConversationAsync()
+    {
+        // WebGL optimization: Yield to prevent blocking
+        yield return null;
+        agent.StartConversation("User");
+    }
+
     public void OnPointerExit(PointerEventData eventData)
     {
-        tooltip?.HideTooltip();
-        
+        if (!isInitialized) return;
+        cachedTooltip?.HideTooltip();
     }
 
     public void SendPrompt(string message)
     {
-        // Send the message to the agent
-        _ =agent.SendPrompt(message);
+        if (!isInitialized || agent == null) return;
+        
+        // WebGL optimization: Send prompt asynchronously
+        StartCoroutine(SendPromptAsync(message));
     }
-    
+
+    private System.Collections.IEnumerator SendPromptAsync(string message)
+    {
+        yield return null;
+        _ = agent.SendPrompt(message);
+    }
     #endregion
 
-    #region HelperFunctions
+    #region Helper Functions
     public void CreateAgent()
     {
-        // Create a new agent with the system prompt
-        agent = new Agent(CreateSystemPrompt(), npc_name);
+        // WebGL optimization: Cache system prompt
+        if (string.IsNullOrEmpty(cachedSystemPrompt))
+        {
+            cachedSystemPrompt = CreateSystemPrompt();
+        }
+        
+        // Create a new agent with the cached system prompt
+        agent = new Agent(cachedSystemPrompt, npc_name);
     }
+
     private string CreateSystemPrompt()
     {
         return
@@ -123,10 +156,10 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         **Goal:** {goal}  
 
         ### Appearance ###
-        **Hair Color:** {appearance.hair_color}  
-        **Eye Color:** {appearance.eye_color}  
-        **Height:** {appearance.height_cm} cm  
-        **Build:** {appearance.build}  
+        **Hair Color:** {appearance?.hair_color ?? "Unknown"}  
+        **Eye Color:** {appearance?.eye_color ?? "Unknown"}  
+        **Height:** {appearance?.height_cm ?? 0} cm  
+        **Build:** {appearance?.build ?? "Average"}  
 
         ### Personality Traits (Big Five) ###
         **Openness:** {personality.openness}  
@@ -136,10 +169,10 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         **Neuroticism:** {personality.neuroticism}  
 
         ### Distinctive Traits ###
-        - {string.Join("\n- ", traits)}
+        - {string.Join("\n- ", traits ?? new List<string>())}
 
         ### Backstory ###
-        {briefHistory}
+        {briefHistory ?? "No backstory available."}
 
         ---
 
@@ -149,6 +182,10 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
         - Respond according to personality, backstory, and traits.  
         - Use aggression only if it fits your personality when user is hostile.  
         - Do **not break character** or mention being an AI.
+        - If detect entering in a loop, subtly change topic or ask a question to move conversation forward.
+        - If you don't know something, respond with uncertainty or deflect.
+        - If no topic, try to relate to your goals, traits, or backstory.
+        - Avoid repetitive phrases or sentence structures.
 
         ### Conversation Style Guidelines ###
         {CreateStyleHints()}
@@ -157,17 +194,49 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler ,IP
 
     private string CreateStyleHints()
     {
-        // Generate personality style hints
-        string styleHints = "";
+        // WebGL optimization: Use string builder pattern for better performance
+        var styleHints = new System.Text.StringBuilder();
 
-        styleHints += personality.openness >= 0.6f ? "- **Openness:** imaginative, curious, and open to new ideas.\n" : "- **Openness:** practical, concrete, and prefers routine.\n";
-        styleHints += personality.conscientiousness >= 0.6f ? "- **Conscientiousness:** structured, careful, and reliable.\n" : "- **Conscientiousness:** spontaneous, casual, and informal.\n";
-        styleHints += personality.extraversion >= 0.6f ? "- **Extraversion:** energetic, talkative, engages actively.\n" : "- **Extraversion:** reserved, quiet, short replies.\n";
-        styleHints += personality.agreeableness >= 0.6f ? "- **Agreeableness:** kind, empathetic, cooperative.\n" : "- **Agreeableness:** blunt, self-focused, argumentative if needed.\n";
-        styleHints += personality.neuroticism >= 0.6f ? "- **Neuroticism:** emotional, slightly anxious or reactive.\n" : "- **Neuroticism:** calm, steady, confident.\n";
+        styleHints.AppendLine(personality.openness >= 0.6f ? 
+            "- **Openness:** imaginative, curious, and open to new ideas." : 
+            "- **Openness:** practical, concrete, and prefers routine.");
+            
+        styleHints.AppendLine(personality.conscientiousness >= 0.6f ? 
+            "- **Conscientiousness:** structured, careful, and reliable." : 
+            "- **Conscientiousness:** spontaneous, casual, and informal.");
+            
+        styleHints.AppendLine(personality.extraversion >= 0.6f ? 
+            "- **Extraversion:** energetic, talkative, engages actively." : 
+            "- **Extraversion:** reserved, quiet, short replies.");
+            
+        styleHints.AppendLine(personality.agreeableness >= 0.6f ? 
+            "- **Agreeableness:** kind, empathetic, cooperative." : 
+            "- **Agreeableness:** blunt, self-focused, argumentative if needed.");
+            
+        styleHints.AppendLine(personality.neuroticism >= 0.6f ? 
+            "- **Neuroticism:** emotional, slightly anxious or reactive." : 
+            "- **Neuroticism:** calm, steady, confident.");
 
-        return styleHints;
-    } 
+        return styleHints.ToString();
+    }
+
+    // WebGL optimization: Cleanup method for object pooling
+    public void ResetForPool()
+    {
+        isInitialized = false;
+        cachedSystemPrompt = null;
+        
+        if (agent != null)
+        {
+            // Clean up agent resources if needed
+            agent = null;
+        }
+        
+        if (nameText != null)
+        {
+            nameText.text = "";
+        }
+    }
     #endregion
 
     #region Nested Classes 
