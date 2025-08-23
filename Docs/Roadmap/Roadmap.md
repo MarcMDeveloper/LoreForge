@@ -62,7 +62,8 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Refactor UI NPC to be in a grid and put some art on it
 - ✅ Add some art to the NPC prefab
 - ✅ Refactor `JsonLoader`, `NPCManager`, `NPC`
-- Refactor UITooltip art and where it shows
+- ✅ Refactor UITooltip art 
+- ✅ Refactor UITooltip design
 
 - Refactor dialogues UI and put some art
 - Add some art on the bubble chat prefab
@@ -98,9 +99,9 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Music changes depending of the tone of conversation (positive/negative)
 - Main Menu detects if there is money in OPEN AI before allowing to continue the game
 - Saves data from user as jsons so works when returns
-- Search and implement some art
+- ✅ Search and implement some art
 - Load json an images from drive with specific links to avoid using the same of the build.
-- Look security aki key
+- ✅ Look security aki key
 
 ### 📝 Notes
 - **Weeks 1–2** focus on Unity-based agent creation, dialogue, and behavior.

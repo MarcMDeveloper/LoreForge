@@ -84,15 +84,6 @@ public class NPCsManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L) && npcs.Count > 1)
             DialogueManager.Instance.StartNPCtoNPCChat(npcs[0], npcs[1], "Hello, whats your name? And what are your last news?");
         
-        // Testing keys
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            TestScrollViewWithNPCs(5);
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            TestScrollViewWithNPCs(10);
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            TestScrollViewWithNPCs(15);
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-            ClearAllNPCs();
     }
 
     #region NPC Creation Management
