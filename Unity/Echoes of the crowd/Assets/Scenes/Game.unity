@@ -200,6 +200,9 @@ MonoBehaviour:
   contentTransform: {fileID: 34661836}
   bubbleMessagePrefab: {fileID: 9182744542443452375, guid: f51df0324a8340d4692e15f57f22b968, type: 3}
   scrollRect: {fileID: 1660790032}
+  allConversations: []
+  totalConversations: 0
+  conversationPreviews: []
 --- !u!224 &34661836 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3216430822991812959, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
@@ -624,7 +627,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 172.7941}
+  m_AnchoredPosition: {x: 0, y: 254.58374}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &314603152
@@ -963,7 +966,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000015258789, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &417330534
@@ -1269,7 +1272,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1592619835}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99998933
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3318,7 +3321,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 25.95
+  m_fontSize: 38.25
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3674,11 +3677,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2683934971382179524, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_Spacing
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2683934971382179524, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_Padding.m_Top
-      value: 10
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2683934971382179524, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_ChildAlignment
@@ -3702,7 +3705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2683934971382179524, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_Padding.m_Bottom
-      value: 0
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 2683934971382179524, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_ChildControlWidth
@@ -3782,7 +3785,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3216430822991812959, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_SizeDelta.y
-      value: -244.29407
+      value: -168.41919
       objectReference: {fileID: 0}
     - target: {fileID: 3216430822991812959, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_AnchoredPosition.x
