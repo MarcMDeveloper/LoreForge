@@ -172,6 +172,6 @@ public class APIKeyManager : MonoBehaviour
     public void ClearAPIKey()
     {
         cachedAPIKey = null;
-        Debug.Log("API key cache cleared.");
+
     }
 }

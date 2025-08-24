@@ -54,17 +54,17 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 
 - ✅ Implement **NPC-to-NPC interaction system**  
 - ✅ Set start the conversation of the two NPC
-- Choose randomly two NPC to speak
+- ✅ Choose randomly two NPC to speak
 - Save the dialogue when finish
 - Load and show the dialogue
-- Debug system prompts for AI dialogue to provide a better behaviour
-- Debug and polish NPC interactions  
 
-- Design + art time
-- Refactor UI NPC to be in a grid and put some art on it
+- ✅ **Design + art time**
+- ✅ Refactor UI NPC to be in a grid and put some art on it
+- ✅ Add some art to the NPC prefab
+- ✅ Refactor `JsonLoader`, `NPCManager`, `NPC`
+- ✅ Refactor `UITooltip` art, refactor + design
+
 - Refactor dialogues UI and put some art
-- Refactor UITooltip art and where it shows
-- Add some art to the NPC prefab
 - Add some art on the bubble chat prefab
 - Add some art to the chat canvas
 - Add some art on the dialogues view chat
@@ -98,9 +98,9 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Music changes depending of the tone of conversation (positive/negative)
 - Main Menu detects if there is money in OPEN AI before allowing to continue the game
 - Saves data from user as jsons so works when returns
-- Search and implement some art
+- ✅ Search and implement some art
 - Load json an images from drive with specific links to avoid using the same of the build.
-- Look security aki key
+- ✅ Look security aki key
 
 ### 📝 Notes
 - **Weeks 1–2** focus on Unity-based agent creation, dialogue, and behavior.

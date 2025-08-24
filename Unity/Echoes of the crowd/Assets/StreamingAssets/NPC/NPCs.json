@@ -48,5 +48,205 @@
     "portrait": "temp.png",
     "goal": "become a renowned explorer",
     "occupation": "Cartographer"
+  },
+  {
+    "id": "npc_003",
+    "name": "Dorian Kells",
+    "gender": "Male",
+    "age": 47,
+    "culture": "Mediterranean",
+    "appearance": {
+      "hair_color": "black",
+      "eye_color": "brown",
+      "height_cm": 175,
+      "build": "stocky"
+    },
+    "personality": {
+      "openness": 0.40,
+      "conscientiousness": 0.85,
+      "extraversion": 0.45,
+      "agreeableness": 0.60,
+      "neuroticism": 0.35
+    },
+    "traits": ["hardworking", "stubborn", "reliable"],
+    "brief_history": "Dorian spent most of his life tending vineyards passed down through generations. His dedication to tradition is both his strength and his weakness.",
+    "portrait": "temp.png",
+    "goal": "preserve his family’s legacy",
+    "occupation": "Vintner"
+  },
+  {
+    "id": "npc_004",
+    "name": "Selene Orlov",
+    "gender": "Female",
+    "age": 28,
+    "culture": "Eastern European",
+    "appearance": {
+      "hair_color": "platinum blonde",
+      "eye_color": "green",
+      "height_cm": 168,
+      "build": "athletic"
+    },
+    "personality": {
+      "openness": 0.65,
+      "conscientiousness": 0.60,
+      "extraversion": 0.55,
+      "agreeableness": 0.40,
+      "neuroticism": 0.50
+    },
+    "traits": ["determined", "resourceful", "guarded"],
+    "brief_history": "Selene grew up in a cold border town, where survival required strength and cunning. She has always sought independence from the expectations of her community.",
+    "portrait": "temp.png",
+    "goal": "earn enough wealth to travel freely",
+    "occupation": "Mercenary"
+  },
+  {
+    "id": "npc_005",
+    "name": "Hassan Alim",
+    "gender": "Male",
+    "age": 31,
+    "culture": "Middle Eastern",
+    "appearance": {
+      "hair_color": "dark brown",
+      "eye_color": "amber",
+      "height_cm": 178,
+      "build": "lean"
+    },
+    "personality": {
+      "openness": 0.70,
+      "conscientiousness": 0.65,
+      "extraversion": 0.50,
+      "agreeableness": 0.75,
+      "neuroticism": 0.30
+    },
+    "traits": ["wise", "patient", "observant"],
+    "brief_history": "Hassan studied under scholars of philosophy and astronomy. Though calm by nature, he harbors a quiet ambition to discover the unknown.",
+    "portrait": "temp.png",
+    "goal": "chart the stars and publish a grand atlas",
+    "occupation": "Astronomer"
+  },
+  {
+    "id": "npc_006",
+    "name": "Isolde Brenn",
+    "gender": "Female",
+    "age": 39,
+    "culture": "Germanic",
+    "appearance": {
+      "hair_color": "red",
+      "eye_color": "blue-gray",
+      "height_cm": 172,
+      "build": "broad-shouldered"
+    },
+    "personality": {
+      "openness": 0.50,
+      "conscientiousness": 0.80,
+      "extraversion": 0.35,
+      "agreeableness": 0.55,
+      "neuroticism": 0.45
+    },
+    "traits": ["practical", "tough", "protective"],
+    "brief_history": "Isolde worked as a blacksmith, inheriting the forge from her father. Known for her strong arms and no-nonsense attitude, she is respected in her town.",
+    "portrait": "temp.png",
+    "goal": "craft a blade worthy of kings",
+    "occupation": "Blacksmith"
+  },
+  {
+    "id": "npc_007",
+    "name": "Taye Okonjo",
+    "gender": "Male",
+    "age": 26,
+    "culture": "West African",
+    "appearance": {
+      "hair_color": "black",
+      "eye_color": "dark brown",
+      "height_cm": 185,
+      "build": "lithe"
+    },
+    "personality": {
+      "openness": 0.85,
+      "conscientiousness": 0.55,
+      "extraversion": 0.80,
+      "agreeableness": 0.70,
+      "neuroticism": 0.20
+    },
+    "traits": ["energetic", "charming", "curious"],
+    "brief_history": "Taye grew up in a bustling trade hub where he quickly learned the art of negotiation and storytelling. His enthusiasm draws people to him.",
+    "portrait": "temp.png",
+    "goal": "become a famous traveling bard",
+    "occupation": "Bard"
+  },
+  {
+    "id": "npc_008",
+    "name": "Amara Solenne",
+    "gender": "Female",
+    "age": 19,
+    "culture": "Southern European",
+    "appearance": {
+      "hair_color": "chestnut",
+      "eye_color": "hazel-green",
+      "height_cm": 162,
+      "build": "slim"
+    },
+    "personality": {
+      "openness": 0.90,
+      "conscientiousness": 0.40,
+      "extraversion": 0.65,
+      "agreeableness": 0.85,
+      "neuroticism": 0.35
+    },
+    "traits": ["kind-hearted", "dreamy", "impulsive"],
+    "brief_history": "Amara grew up in a farming village, often sneaking away to sing in the fields. She is filled with wanderlust and romantic notions.",
+    "portrait": "temp.png",
+    "goal": "travel the world and find true love",
+    "occupation": "Wanderer"
+  },
+  {
+    "id": "npc_009",
+    "name": "Ryker Dorn",
+    "gender": "Male",
+    "age": 42,
+    "culture": "Nordic",
+    "appearance": {
+      "hair_color": "graying brown",
+      "eye_color": "steel gray",
+      "height_cm": 188,
+      "build": "heavily built"
+    },
+    "personality": {
+      "openness": 0.35,
+      "conscientiousness": 0.90,
+      "extraversion": 0.40,
+      "agreeableness": 0.45,
+      "neuroticism": 0.55
+    },
+    "traits": ["stoic", "unyielding", "stern"],
+    "brief_history": "Once a commander of a warband, Ryker lost many comrades in a disastrous raid. Now he leads a quiet life but carries scars both seen and unseen.",
+    "portrait": "temp.png",
+    "goal": "find redemption for past mistakes",
+    "occupation": "Retired Soldier"
+  },
+  {
+    "id": "npc_010",
+    "name": "Nadia Petrova",
+    "gender": "Female",
+    "age": 33,
+    "culture": "Slavic",
+    "appearance": {
+      "hair_color": "black",
+      "eye_color": "ice blue",
+      "height_cm": 170,
+      "build": "slender"
+    },
+    "personality": {
+      "openness": 0.60,
+      "conscientiousness": 0.75,
+      "extraversion": 0.50,
+      "agreeableness": 0.55,
+      "neuroticism": 0.45
+    },
+    "traits": ["cunning", "ambitious", "charming"],
+    "brief_history": "Nadia rose from poverty through wit and manipulation, learning to survive in the courts of nobles. She is always calculating her next move.",
+    "portrait": "temp.png",
+    "goal": "gain influence among the nobility",
+    "occupation": "Court Advisor"
   }
 ]

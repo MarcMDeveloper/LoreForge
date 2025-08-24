@@ -1,72 +1,104 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NPCsManager : MonoBehaviour
 {
     #region Fields
-    public Canvas npcCanvas;
-    public GameObject npcPrefab; // Prefab for the NPC
-    public List<NPC> npcs; // List to hold all NPCs in the game
-    private string jsonFilePath = "NPC/NPCs.json";
-
-    // Variables for setting prefab correctly in the canvas
-    private int gridColumns = 5; // Number of columns in the grid
-    private float cellWidth = 100f; // Width of each button/image
-    private float cellHeight = 120f; // Height of each button/image
-    private Vector2 startOffset = new Vector2(100f, -100f); // Top-left starting point
+    [Header("References")]
+    public GameObject npcCanvas;
+    public GameObject npcPrefab;
+    
+    [Header("Grid Configuration")]
+    [SerializeField] private int gridColumns = 5;
+    [SerializeField] private float cellWidth = 100f;
+    [SerializeField] private float cellHeight = 120f;
+    [SerializeField] private Vector2 startOffset = new Vector2(100f, -100f);
+    
+    // Data
+    public List<NPC> npcs = new List<NPC>();
     private int npcCount = 0;
-
+    
+    // Object pooling for WebGL performance
+    private Queue<GameObject> npcPool = new Queue<GameObject>();
+    private List<GameObject> activeNPCs = new List<GameObject>();
+    
+    // Events
+    public static event System.Action OnAllNPCsLoaded;
+    
     #endregion
 
-    // This class will manage the creation of the NPCs in the game 
     #region Singleton Setup
     public static NPCsManager Instance { get; private set; }
+    
     private void Awake()
     {
-        // If another instance exists, destroy this one
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
             return;
         }
-
-        // Assign instance
         Instance = this;
-
-        // Keep this object alive between scenes
         DontDestroyOnLoad(gameObject);
     }
     #endregion
 
+    private void Start()
+    {
+        LoadAllNPCsAtStart();
+    }
+
+    private async void LoadAllNPCsAtStart()
+    {
+        var npcList = await JsonLoader.LoadFromStreamingAssets("NPC/NPCs.json");
+        if (npcList?.npcs != null)
+        {
+            foreach (var npcData in npcList.npcs)
+            {
+                CreateNPC(npcData);
+            }
+            OnAllNPCsLoaded?.Invoke();
+        }
+    }
+
     private void Update()
     {
-        // For testing purposes only
-        if (Input.GetKeyDown(KeyCode.L))
-            DialogueManager.Instance.StartNPCtoNPCChat(npcs[0], npcs[1], "Hello, whats your name? And what are your last news?");
-    }
-    #region NPC Creation management functions
-    public async void LoadNPCs()
-    {
-        NPCList npcList = await JsonLoader.LoadFromStreamingAssets(jsonFilePath);
-        if (npcList != null)
+        // Empty for now - can be used for future functionality
+        if(Input.GetKeyDown(KeyCode.Alpha0))
         {
-            foreach (NPCData npcData in npcList.npcs)
-                CreateNPC(npcData);
+            // Select two random NPCs (ensuring they are different)
+            int randomIndex1 = Random.Range(0, npcs.Count);
+            int randomIndex2;
+            do
+            {
+                randomIndex2 = Random.Range(0, npcs.Count);
+            } while (randomIndex2 == randomIndex1 && npcs.Count > 1);
+            
+            DialogueManager.Instance.StartNPCtoNPCChat(npcs[randomIndex1], npcs[randomIndex2], "Hello, how are you?");
         }
-        else
-            Debug.LogError("Failed to load NPCs from JSON.");
+        else if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            DialogueManager.Instance.DisplaySavedConversation(0);
+        }
     }
 
+    private void OnDestroy()
+    {
+        // Since NPCs are static, just clear references
+        npcs.Clear();
+        activeNPCs.Clear();
+        npcPool.Clear();
+    }
+
+    #region NPC Creation Management
     private void CreateNPC(NPCData npcData)
     {
-        // Instantiate the prefab as a child of the Canvas
         GameObject npcObject = Instantiate(npcPrefab, npcCanvas.transform);
-
-        // Optionally set the name in the hierarchy
+        
+        activeNPCs.Add(npcObject);
         npcObject.name = npcData.name;
 
-        // Reset RectTransform to default so it appears properly
         RectTransform rectTransform = npcObject.GetComponent<RectTransform>();
         if (rectTransform != null)
         {
@@ -74,63 +106,26 @@ public class NPCsManager : MonoBehaviour
             rectTransform.anchorMax = new Vector2(0, 1);
             rectTransform.pivot = new Vector2(0, 1);
 
-            // Calculate position in grid
             int row = npcCount / gridColumns;
             int col = npcCount % gridColumns;
 
             float x = startOffset.x + col * cellWidth;
-            float y = startOffset.y - row * cellHeight; // Negative because Y goes down in UI
+            float y = startOffset.y - row * cellHeight;
 
             rectTransform.anchoredPosition = new Vector2(x, y);
             rectTransform.localScale = Vector3.one;
         }
 
-        // Get the NPC component (on the same GameObject as the button)
         NPC npcComponent = npcObject.GetComponent<NPC>();
         if (npcComponent != null)
         {
-            npcComponent.Initialize(
-                npcData.id,
-                npcData.name,
-                npcData.gender,
-                npcData.age,
-                npcData.culture,
-                new NPC.NPC_Appearance(
-                    npcData.appearance.hair_color,
-                    npcData.appearance.eye_color,
-                    npcData.appearance.height_cm,
-                    npcData.appearance.build
-                ),
-                new NPC.NPC_Personality(
-                    npcData.personality.openness,
-                    npcData.personality.conscientiousness,
-                    npcData.personality.extraversion,
-                    npcData.personality.agreeableness,
-                    npcData.personality.neuroticism
-                ),
-                npcData.traits,
-                npcData.brief_history,
-                npcData.portrait,
-                npcData.goal,
-                npcData.occupation
-            );
+            npcComponent.Initialize(npcData);
 
-            // Add to list if needed
             npcs.Add(npcComponent);
-
             npcCount++;
-        }
-        else
-        {
-            Debug.LogError("Prefab is missing NPC component!");
         }
     }
     #endregion
-
-
-
-
-
 }
 
 
