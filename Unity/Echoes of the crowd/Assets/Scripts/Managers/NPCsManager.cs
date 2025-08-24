@@ -16,6 +16,92 @@ public class NPCsManager : MonoBehaviour
     [SerializeField] private float cellHeight = 120f;
     [SerializeField] private Vector2 startOffset = new Vector2(100f, -100f);
     
+    [Header("Dialogue")]
+    [SerializeField] private List<string> greetingMessages = new List<string>
+    {
+        // Friendly greetings
+        "Hello, how are you?",
+        "Hey there! Nice to see you.",
+        "Good day! How's everything going?",
+        "Hi! What's new with you?",
+        "Greetings! How have you been?",
+        "Hello! Lovely weather we're having.",
+        "Hey! Long time no see.",
+        "Good morning! How are you doing?",
+        "Hi there! What brings you here?",
+        "Hello! It's great to see you again.",
+        "Hey! How's your day going?",
+        "Greetings! What's on your mind?",
+        "Hi! Nice to meet you.",
+        "Hello there! How are things?",
+        "Hey! What's the latest news?",
+        
+        // Aggressive greetings
+        "What do you want?",
+        "Why are you bothering me?",
+        "Get out of my way!",
+        "What's your problem?",
+        "Leave me alone!",
+        "I don't have time for this!",
+        "What are you staring at?",
+        "Mind your own business!",
+        "I'm not in the mood for chitchat!",
+        "What's so important that you need to talk to me?",
+        "I don't want to hear it!",
+        "Save your breath!",
+        "I'm busy, can't you see?",
+        "What's with the attitude?",
+        "I don't need your company!",
+        
+        // Nervous/Anxious greetings
+        "Oh! You startled me...",
+        "Um... hello there...",
+        "I wasn't expecting anyone...",
+        "Is everything okay?",
+        "You look... concerned...",
+        "I hope nothing's wrong...",
+        "Are you sure you want to talk to me?",
+        "I'm not very good at conversations...",
+        "Please don't be mad...",
+        "Did I do something wrong?",
+        
+        // Excited/Enthusiastic greetings
+        "Oh my! It's you!",
+        "Fantastic! Just the person I wanted to see!",
+        "Amazing! What a coincidence!",
+        "Brilliant! How are you doing?",
+        "Excellent! Great timing!",
+        "Wonderful! I'm so glad you're here!",
+        "Incredible! What brings you by?",
+        "Spectacular! How's your day been?",
+        "Marvelous! I was just thinking about you!",
+        "Outstanding! What a pleasant surprise!",
+        
+        // Sarcastic greetings
+        "Well, well, well... look who decided to show up.",
+        "Oh great, just what I needed.",
+        "Fancy meeting you here...",
+        "What a delightful surprise... not.",
+        "Oh joy, another conversation.",
+        "How absolutely thrilling to see you.",
+        "What an unexpected pleasure... said no one ever.",
+        "Oh look, it's the life of the party.",
+        "How wonderful... I was just thinking about how much I wanted to talk to someone.",
+        "What brings you to my humble abode?",
+        
+        // Suspicious greetings
+        "What are you up to?",
+        "Why are you really here?",
+        "I don't trust you...",
+        "What's your angle?",
+        "You seem suspicious...",
+        "What do you want from me?",
+        "I'm watching you...",
+        "Don't try anything funny.",
+        "What's the catch?",
+        "You're not fooling anyone..."
+    };
+    
     // Data
     public List<NPC> npcs = new List<NPC>();
     private int npcCount = 0;
@@ -75,7 +161,9 @@ public class NPCsManager : MonoBehaviour
                 randomIndex2 = Random.Range(0, npcs.Count);
             } while (randomIndex2 == randomIndex1 && npcs.Count > 1);
             
-            DialogueManager.Instance.StartNPCtoNPCChat(npcs[randomIndex1], npcs[randomIndex2], "Hello, how are you?");
+            // Get a random greeting message
+            string randomGreeting = GetRandomGreeting();
+            DialogueManager.Instance.StartNPCtoNPCChat(npcs[randomIndex1], npcs[randomIndex2], randomGreeting);
         }
         else if(Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -124,6 +212,19 @@ public class NPCsManager : MonoBehaviour
             npcs.Add(npcComponent);
             npcCount++;
         }
+    }
+    #endregion
+
+    #region Dialogue Helpers
+    private string GetRandomGreeting()
+    {
+        if (greetingMessages.Count == 0)
+        {
+            return "Hello, how are you?"; // Fallback message
+        }
+        
+        int randomIndex = Random.Range(0, greetingMessages.Count);
+        return greetingMessages[randomIndex];
     }
     #endregion
 }
