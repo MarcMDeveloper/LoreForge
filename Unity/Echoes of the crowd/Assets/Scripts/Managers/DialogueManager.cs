@@ -10,13 +10,13 @@ public class DialogueManager : MonoBehaviour
     public TMP_InputField inputText;
     public List<NPC> npcsInChat;
 
-    public Transform contentTransform;  
+    public Transform contentTransform;
     public GameObject bubbleMessagePrefab;
     public ScrollRect scrollRect;
 
     public List<List<SummaryConversation>> allConversations;
     #endregion
-  
+
     #region Singleton Setup
     public static DialogueManager Instance { get; private set; }
     private void Awake()
@@ -57,10 +57,10 @@ public class DialogueManager : MonoBehaviour
     #region Chat UI 
     // Add NPC message
     public void AddMessage(string name, string message, MessageType messageType)
-    {        
+    {
         GameObject newMessage = Instantiate(bubbleMessagePrefab, contentTransform);
-        newMessage.GetComponent<ChatUIBehaviour>().AddMessage(name,message,messageType);
-      
+        newMessage.GetComponent<ChatUIBehaviour>().AddMessage(name, message, messageType);
+
         ScrollToBottom();
     }
 
@@ -70,11 +70,11 @@ public class DialogueManager : MonoBehaviour
         // Force layout rebuild to ensure proper stacking
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform as RectTransform);
         Canvas.ForceUpdateCanvases();
-        
+
         // Add a small delay to ensure layout is processed
         StartCoroutine(DelayedScrollToBottom());
     }
-    
+
     private IEnumerator DelayedScrollToBottom()
     {
         yield return new WaitForEndOfFrame();
@@ -106,8 +106,8 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            AddMessage(npc.npc_name,$"Let's start a conversation!", MessageType.Middle);
-        }        
+            AddMessage(npc.npc_name, $"Let's start a conversation!", MessageType.Middle);
+        }
     }
 
     public void EndChat()
@@ -136,14 +136,14 @@ public class DialogueManager : MonoBehaviour
 
         npcsInChat[0].SendPrompt(currenMessage);
 
-        AddMessage("User",currenMessage, MessageType.Left);     
-        inputText.text = string.Empty;          
+        AddMessage("User", currenMessage, MessageType.Left);
+        inputText.text = string.Empty;
 
     }
-    
+
     public void MessageRecived(string name, string message)
     {
-        AddMessage(name,message, MessageType.Right);
+        AddMessage(name, message, MessageType.Right);
     }
     #endregion
 
@@ -214,7 +214,7 @@ public class DialogueManager : MonoBehaviour
     }
     #endregion
 
-    #region Chat load management
+    #region Dialogues management
     public void LoadChat(int firstID, int secondID)
     {
         // Load the chat history between two NPCs
@@ -222,5 +222,7 @@ public class DialogueManager : MonoBehaviour
         // For now, we will just log the IDs
 
     }
+    
+
     #endregion
 }

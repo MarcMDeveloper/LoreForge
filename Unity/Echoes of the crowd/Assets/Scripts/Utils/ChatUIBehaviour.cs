@@ -19,5 +19,20 @@ public class ChatUIBehaviour : MonoBehaviour
     {
         nameText.text = name;
         contentText.text = content;
+        if(messageType == MessageType.Left)
+        {
+            nameText.alignment = TextAlignmentOptions.Left;
+            contentText.alignment = TextAlignmentOptions.Left;
+        }
+        else if(messageType == MessageType.Right)
+        {
+            nameText.alignment = TextAlignmentOptions.Right;
+            contentText.alignment = TextAlignmentOptions.Right;
+        }
+        else if(messageType == MessageType.Middle)
+        {
+            nameText.alignment = TextAlignmentOptions.Center;
+            contentText.alignment = TextAlignmentOptions.Center;
+        }
     }
 }
