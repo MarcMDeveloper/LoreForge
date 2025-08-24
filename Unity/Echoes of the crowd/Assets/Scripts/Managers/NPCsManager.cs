@@ -65,9 +65,17 @@ public class NPCsManager : MonoBehaviour
     private void Update()
     {
         // Empty for now - can be used for future functionality
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Alpha0))
         {
-            DialogueManager.Instance.StartNPCtoNPCChat(npcs[0], npcs[1], "Hello, how are you?");
+            // Select two random NPCs (ensuring they are different)
+            int randomIndex1 = Random.Range(0, npcs.Count);
+            int randomIndex2;
+            do
+            {
+                randomIndex2 = Random.Range(0, npcs.Count);
+            } while (randomIndex2 == randomIndex1 && npcs.Count > 1);
+            
+            DialogueManager.Instance.StartNPCtoNPCChat(npcs[randomIndex1], npcs[randomIndex2], "Hello, how are you?");
         }
         else if(Input.GetKeyDown(KeyCode.Alpha1))
         {

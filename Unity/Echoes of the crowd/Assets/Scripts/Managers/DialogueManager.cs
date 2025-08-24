@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Linq;
-
-[System.Serializable]
-public class ConversationData
-{
-    public List<OpenAIMessage> messages = new List<OpenAIMessage>();
-}
 
 public class DialogueManager : MonoBehaviour
 {
@@ -24,10 +17,10 @@ public class DialogueManager : MonoBehaviour
 
     public List<ConversationData> allConversations;
     
-    // New field to store current conversation messages
+    // Current conversation being tracked
     private List<OpenAIMessage> currentConversationMessages;
     
-    // Inspector helper properties to show conversation info
+    // Inspector debug info
     [Header("Conversation Debug Info")]
     [SerializeField] private int totalConversations;
     [SerializeField] private string[] conversationPreviews;
@@ -51,9 +44,6 @@ public class DialogueManager : MonoBehaviour
 
         allConversations = new List<ConversationData>();
         currentConversationMessages = new List<OpenAIMessage>();
-
-        // Initialize inspector debug info
-        UpdateInspectorDebugInfo();
 
         // Keep this object alive between scenes
         DontDestroyOnLoad(gameObject);
@@ -112,14 +102,14 @@ public class DialogueManager : MonoBehaviour
         // Initialize the agent for this NPC
         // npc.agent = new Agent(npc.CreateSystemPrompt());
 
+        // Clear current conversation messages
+        currentConversationMessages.Clear();
+
         // Open the chat screen
         OpenChatScreen();
 
         // Add the NPC to the chat list
         npcsInChat.Add(npc);
-
-        // Clear current conversation messages for new chat
-        currentConversationMessages.Clear();
 
         // Add summmary if exist
         string summary = npc.agent.GetSummary(npc.npc_name);
@@ -136,13 +126,10 @@ public class DialogueManager : MonoBehaviour
     public void EndChat()
     {
         // Save the conversation before clearing
-        if (npcsInChat.Count > 0 && currentConversationMessages.Count > 0)
-        {
-            SaveConversation();
-        }
+        SaveConversation();
         
         // Clear the chat history if needed        
-        // Tell the agent (only if there are NPCs in chat)
+        // Tell the agent
         if (npcsInChat.Count > 0)
         {
             npcsInChat[0].agent.FinishChat();
@@ -150,14 +137,14 @@ public class DialogueManager : MonoBehaviour
         npcsInChat.Clear();
         inputText.text = string.Empty;
 
-        // Clear current conversation messages
-        currentConversationMessages.Clear();
-
         // Erase all messages in the chat
         foreach (Transform child in contentTransform)
         {
             Destroy(child.gameObject);
         }
+        
+        // Clear current conversation messages
+        currentConversationMessages.Clear();
     }
 
     public void SendMessage()
@@ -169,21 +156,20 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        // Check if there are NPCs in chat
         if (npcsInChat.Count == 0)
         {
             Debug.LogWarning("No NPCs in chat to send message to.");
             return;
         }
 
-        // Add user message to conversation history with actual speaker name
-        currentConversationMessages.Add(new OpenAIMessage 
-        { 
-            role = "User", 
-            content = currenMessage 
-        });
-
         npcsInChat[0].SendPrompt(currenMessage);
+
+        // Add user message to current conversation
+        currentConversationMessages.Add(new OpenAIMessage
+        {
+            role = "User",
+            content = currenMessage
+        });
 
         AddMessage("User", currenMessage, MessageType.Left);
         inputText.text = string.Empty;
@@ -192,11 +178,11 @@ public class DialogueManager : MonoBehaviour
 
     public void MessageRecived(string name, string message)
     {
-        // Add NPC message to conversation history with actual speaker name
-        currentConversationMessages.Add(new OpenAIMessage 
-        { 
-            role = name, 
-            content = message 
+        // Add NPC message to current conversation
+        currentConversationMessages.Add(new OpenAIMessage
+        {
+            role = name,
+            content = message
         });
         
         AddMessage(name, message, MessageType.Right);
@@ -206,14 +192,14 @@ public class DialogueManager : MonoBehaviour
     #region Chat NPC - NPC
     public void StartNPCtoNPCChat(NPC npcA, NPC npcB, string initialMessage)
     {
+        // Clear current conversation messages
+        currentConversationMessages.Clear();
+        
         OpenChatScreen();
 
         npcsInChat.Clear();
         npcsInChat.Add(npcA);
         npcsInChat.Add(npcB);
-
-        // Clear current conversation messages for new chat
-        currentConversationMessages.Clear();
 
         // Start conversation for both NPCs with proper context
         npcA.agent.StartConversation(npcB.npc_name);
@@ -229,11 +215,11 @@ public class DialogueManager : MonoBehaviour
         // Start the conversation with the initial message from NPC A
         AddMessage(npcA.npc_name, initialMessage, MessageType.Left);
         
-        // Add initial message to conversation history with actual speaker name
-        currentConversationMessages.Add(new OpenAIMessage 
-        { 
-            role = npcA.npc_name, 
-            content = initialMessage 
+        // Add initial message to current conversation
+        currentConversationMessages.Add(new OpenAIMessage
+        {
+            role = npcA.npc_name,
+            content = initialMessage
         });
         
         _ = npcA.agent.SendPromptSilent(initialMessage);
@@ -267,11 +253,11 @@ public class DialogueManager : MonoBehaviour
                     MessageType messageSide = (listener == npcA) ? MessageType.Left : MessageType.Right;
                     AddMessage(listener.npc_name, response, messageSide);
                     
-                    // Add response to conversation history with actual speaker name
-                    currentConversationMessages.Add(new OpenAIMessage 
-                    { 
-                        role = listener.npc_name, 
-                        content = response 
+                    // Add NPC response to current conversation
+                    currentConversationMessages.Add(new OpenAIMessage
+                    {
+                        role = listener.npc_name,
+                        content = response
                     });
                     
                     // Reset null response counter
@@ -303,18 +289,12 @@ public class DialogueManager : MonoBehaviour
         string endMessage = "The conversation has come to a natural conclusion.";
         AddMessage("System", endMessage, MessageType.Middle);
         
-        // Save the conversation before cleaning up
-        if (currentConversationMessages.Count > 0)
-        {
-            SaveConversation();
-        }
+        // Save the conversation
+        SaveConversation();
         
         // Clean up the conversation
         npcA.agent.FinishChat();
         npcB.agent.FinishChat();
-        
-        // Clear current conversation messages
-        currentConversationMessages.Clear();
     }
 
     private IEnumerator GetNPCResponseAsync(NPC npc, string speakerName, string message, System.Action<string> callback)
@@ -585,4 +565,10 @@ public class DialogueManager : MonoBehaviour
     }
 
     #endregion
+}
+
+[System.Serializable]
+public class ConversationData
+{
+    public List<OpenAIMessage> messages = new List<OpenAIMessage>();
 }
