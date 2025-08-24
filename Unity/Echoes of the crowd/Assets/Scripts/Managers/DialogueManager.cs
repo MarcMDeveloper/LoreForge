@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
 public class DialogueManager : MonoBehaviour
 {
     #region Variables
@@ -12,12 +11,10 @@ public class DialogueManager : MonoBehaviour
     public List<NPC> npcsInChat;
 
     public Transform contentTransform;  
-    public GameObject rightMessagePrefab;
-    public GameObject leftMessagePrefab;
-    public GameObject middleMessagePrefab;
+    public GameObject bubbleMessagePrefab;
     public ScrollRect scrollRect;
 
-
+    public List<List<SummaryConversation>> allConversations;
     #endregion
   
     #region Singleton Setup
@@ -36,6 +33,8 @@ public class DialogueManager : MonoBehaviour
 
         ChatScreen.SetActive(false);
 
+        allConversations = new List<List<SummaryConversation>>();
+
         // Keep this object alive between scenes
         DontDestroyOnLoad(gameObject);
     }
@@ -46,6 +45,7 @@ public class DialogueManager : MonoBehaviour
     {
         ChatScreen.SetActive(true);
     }
+
     public void CloseChatScreen()
     {
         EndChat();
@@ -56,30 +56,29 @@ public class DialogueManager : MonoBehaviour
 
     #region Chat UI 
     // Add NPC message
-    public void AddLeftMessage(string name, string message)
-    {
-        GameObject newMessage = Instantiate(rightMessagePrefab, contentTransform);
-        newMessage.GetComponent<ChatUIBehaviour>().AddLeftMessage(name,message);
+    public void AddMessage(string name, string message, MessageType messageType)
+    {        
+        GameObject newMessage = Instantiate(bubbleMessagePrefab, contentTransform);
+        newMessage.GetComponent<ChatUIBehaviour>().AddMessage(name,message,messageType);
+      
         ScrollToBottom();
     }
 
-    // Add Player message
-    public void AddRightMessage(string name,string message)
-    {
-        GameObject newMessage = Instantiate(leftMessagePrefab, contentTransform);
-        newMessage.GetComponent<ChatUIBehaviour>().AddLeftMessage(name,message);
-        ScrollToBottom();
-    }
-
-    public void AddMiddleMessage(string message)
-    {
-        GameObject newMessage = Instantiate(middleMessagePrefab, contentTransform);
-        newMessage.GetComponent<ChatUIBehaviour>().AddMiddleMessage(message);
-        ScrollToBottom();
-    }
     // Keep scroll at bottom when new message appears
     private void ScrollToBottom()
     {
+        // Force layout rebuild to ensure proper stacking
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform as RectTransform);
+        Canvas.ForceUpdateCanvases();
+        
+        // Add a small delay to ensure layout is processed
+        StartCoroutine(DelayedScrollToBottom());
+    }
+    
+    private IEnumerator DelayedScrollToBottom()
+    {
+        yield return new WaitForEndOfFrame();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentTransform as RectTransform);
         Canvas.ForceUpdateCanvases();
         scrollRect.verticalNormalizedPosition = 0f;
     }
@@ -103,11 +102,11 @@ public class DialogueManager : MonoBehaviour
         string summary = npc.agent.GetSummary(npc.npc_name);
         if (!string.IsNullOrEmpty(summary))
         {
-            AddMiddleMessage($"**{npc.npc_name}**: {summary}");
+            AddMessage(npc.npc_name, $"{summary}", MessageType.Middle);
         }
         else
         {
-            AddMiddleMessage($"**{npc.npc_name}**: Let's start a conversation!");
+            AddMessage(npc.npc_name,$"Let's start a conversation!", MessageType.Middle);
         }        
     }
 
@@ -137,14 +136,14 @@ public class DialogueManager : MonoBehaviour
 
         npcsInChat[0].SendPrompt(currenMessage);
 
-        AddLeftMessage("User",currenMessage);     
+        AddMessage("User",currenMessage, MessageType.Left);     
         inputText.text = string.Empty;          
 
     }
     
     public void MessageRecived(string name, string message)
     {
-        AddRightMessage(name,message);
+        AddMessage(name,message, MessageType.Right);
     }
     #endregion
 
@@ -162,9 +161,9 @@ public class DialogueManager : MonoBehaviour
         npcB.agent.StartConversation(npcA.npc_name);
 
         // Kick off with initial message from NPC A
-        AddLeftMessage(npcA.npc_name, initialMessage);
+        AddMessage(npcA.npc_name, initialMessage, MessageType.Left);
         npcA.agent.SendPrompt(initialMessage);
-        Debug.Log($"Starting NPC-to-NPC chat between {npcA.npc_name} and {npcB.npc_name} with message: {initialMessage}");
+
 
         // Then let NPC B reply
         StartCoroutine(NPCtoNPCLoop(npcA, npcB));
@@ -179,7 +178,7 @@ public class DialogueManager : MonoBehaviour
         int maxExchanges = 6;
 
         string firstMessage = "Hello, how are you today?";
-        AddLeftMessage(speaker.npc_name, firstMessage);
+        AddMessage(speaker.npc_name, firstMessage, MessageType.Left);
         speaker.agent.SendPrompt(firstMessage);
 
         yield return new WaitForSeconds(2f);
@@ -193,9 +192,9 @@ public class DialogueManager : MonoBehaviour
             {
                 // Show message on correct side
                 if (speaker == npcA)
-                    AddLeftMessage(speaker.npc_name, lastMessage);
+                    AddMessage(speaker.npc_name, lastMessage, MessageType.Left);
                 else
-                    AddRightMessage(speaker.npc_name, lastMessage);
+                    AddMessage(speaker.npc_name, lastMessage, MessageType.Right);
 
                 // Tell the other NPC what was just said (with speaker name!)
                 string formatted = $"{speaker.npc_name} said: {lastMessage}";
@@ -211,7 +210,7 @@ public class DialogueManager : MonoBehaviour
             yield return new WaitForSeconds(2f);
         }
 
-        AddMiddleMessage("Conversation ended.");
+        AddMessage(speaker.npc_name + " " + listener.npc_name, "Conversation ended.", MessageType.Middle);
     }
     #endregion
 
@@ -221,7 +220,7 @@ public class DialogueManager : MonoBehaviour
         // Load the chat history between two NPCs
         // This could involve fetching data from a database or a file
         // For now, we will just log the IDs
-        Debug.Log($"Loading chat between NPCs with IDs: {firstID} and {secondID}");
+
     }
     #endregion
 }
