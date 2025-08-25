@@ -10,17 +10,21 @@
 LoreForge/
 ├── LICENSE
 ├── README.md
-├── Unity/                 # Unity Project
+├── Echoes of the crowd/   # Unity Project
 │   ├── Assets/
 │   │   ├── Scripts/
 │   │   │   ├── NPC/       # NPC agents, memory, and dialogue
 │   │   │   ├── Managers/  # Interaction and dialogue managers
+│   │   │   ├── Security/  # Security and authentication
 │   │   │   └── Utils/     # Helper scripts
 │   │   ├── StreamingAssets/
-│   │   │   └── NPCs/      # Generated JSONs for WebGL/Runtime
+│   │   │   └── NPC/       # Generated NPC JSONs
 │   │   ├── Scenes/
-│   │   │   └── MainScene.unity
-│   │   └── Resources/     # UI, fonts, images
+│   │   │   └── Game.unity
+│   │   ├── Resources/     # UI, fonts, images
+│   │   ├── UI Toolkit/    # UI components
+│   │   ├── TextMesh Pro/  # Text rendering
+│   │   └── Settings/      # Project settings
 ├── NPC_Generator/         # Python NPC Generator
 │   ├── data_sources/      # Raw datasets
 │   │   ├── cultures/      # Cultural norms & behaviors
