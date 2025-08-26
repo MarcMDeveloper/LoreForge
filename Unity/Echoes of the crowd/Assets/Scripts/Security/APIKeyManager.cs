@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Secure API Key Manager for WebGL builds
@@ -50,8 +52,36 @@ public class APIKeyManager : MonoBehaviour
         }
     }
 
+    private string workerUrl = "https://my-worker.loreforge.workers.dev";
+
+     public IEnumerator CallWorker(string jsonPayload, System.Action<string> onSuccess = null, System.Action<string> onError = null)
+    {
+        using (UnityWebRequest req = new UnityWebRequest(workerUrl, "POST"))
+        {
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
+            req.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            req.downloadHandler = new DownloadHandlerBuffer();
+            req.SetRequestHeader("Content-Type", "application/json");
+
+            yield return req.SendWebRequest();
+
+            if (req.result != UnityWebRequest.Result.Success)
+            {
+                string errorMsg = $"Worker call failed: {req.error} | code: {req.responseCode} | body: {req.downloadHandler.text}";
+                Debug.LogError(errorMsg);
+                onError?.Invoke(errorMsg);
+            }
+            else
+            {
+                string response = req.downloadHandler.text;
+                Debug.Log($"Worker success: {response}");
+                onSuccess?.Invoke(response);
+            }
+        }
+    }
+    
     /// <summary>
-    /// Gets the API key from secure storage
+    /// Gets the API key from secure storage via worker
     /// </summary>
     /// <returns>The API key</returns>
     public string GetAPIKey()
@@ -76,67 +106,57 @@ public class APIKeyManager : MonoBehaviour
                 return cachedAPIKey;
             }
 
-            // Try to load from a separate config file (not in version control)
-            string configPath = Application.dataPath + "/../api_config.txt";
-            if (System.IO.File.Exists(configPath))
-            {
-                string configContent = System.IO.File.ReadAllText(configPath);
-                string[] lines = configContent.Split('\n');
-                foreach (string line in lines)
-                {
-                    if (line.Trim().StartsWith("API_KEY="))
-                    {
-                        string rawKey = line.Trim().Substring(8).Trim();
-                        
-                        // Apply additional obfuscation if WebGL security is available
-                        if (WebGLSecurityManager.Instance != null)
-                        {
-                            cachedAPIKey = WebGLSecurityManager.Instance.DeobfuscateData(rawKey);
-                        }
-                        else
-                        {
-                            cachedAPIKey = rawKey;
-                        }
-                        
-                        return cachedAPIKey;
-                    }
-                }
-            }
-
-            // Fallback: try to load from Resources (for build)
-            TextAsset configAsset = Resources.Load<TextAsset>("api_config");
-            if (configAsset != null)
-            {
-                string[] lines = configAsset.text.Split('\n');
-                foreach (string line in lines)
-                {
-                    if (line.Trim().StartsWith("API_KEY="))
-                    {
-                        string rawKey = line.Trim().Substring(8).Trim();
-                        
-                        // Apply additional obfuscation if WebGL security is available
-                        if (WebGLSecurityManager.Instance != null)
-                        {
-                            cachedAPIKey = WebGLSecurityManager.Instance.DeobfuscateData(rawKey);
-                        }
-                        else
-                        {
-                            cachedAPIKey = rawKey;
-                        }
-                        
-                        return cachedAPIKey;
-                    }
-                }
-            }
-
-            Debug.LogError("No API key found. Please set up the API key using one of the methods in the README.");
-            return null;
+            // Use worker to retrieve API key
+            StartCoroutine(GetAPIKeyFromWorker());
+            
+            // Return cached key if available, otherwise return null
+            // The worker will update cachedAPIKey when it completes
+            return cachedAPIKey;
         }
         catch (Exception e)
         {
             Debug.LogError($"Error retrieving API key: {e.Message}");
             return null;
         }
+    }
+
+    /// <summary>
+    /// Coroutine to get API key from worker
+    /// </summary>
+    private IEnumerator GetAPIKeyFromWorker()
+    {
+        // Create request payload for API key
+        string jsonPayload = "{\"action\":\"get_api_key\"}";
+        
+        yield return StartCoroutine(CallWorker(jsonPayload, 
+            onSuccess: (response) => {
+                try
+                {
+                    // Parse the response to extract the API key
+                    // Assuming the worker returns JSON like: {"api_key": "sk-..."}
+                    // You may need to adjust this based on your worker's response format
+                    if (response.Contains("api_key"))
+                    {
+                        // Simple parsing - you might want to use a proper JSON parser
+                        int startIndex = response.IndexOf("\"api_key\":\"") + 11;
+                        int endIndex = response.IndexOf("\"", startIndex);
+                        if (startIndex > 10 && endIndex > startIndex)
+                        {
+                            string apiKey = response.Substring(startIndex, endIndex - startIndex);
+                            cachedAPIKey = apiKey;
+                            Debug.Log("API key retrieved from worker successfully");
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Error parsing API key from worker response: {e.Message}");
+                }
+            },
+            onError: (error) => {
+                Debug.LogError($"Failed to get API key from worker: {error}");
+            }
+        ));
     }
 
     /// <summary>

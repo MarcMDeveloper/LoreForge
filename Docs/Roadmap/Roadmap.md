@@ -55,8 +55,8 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Implement **NPC-to-NPC interaction system**  
 - ✅ Set start the conversation of the two NPC
 - ✅ Choose randomly two NPC to speak
-- Save the dialogue when finish
-- Load and show the dialogue
+- ✅ Save the dialogue when finish
+- ✅ Load and show the dialogue
 
 - ✅ **Design + art time**
 - ✅ Refactor UI NPC to be in a grid and put some art on it
@@ -64,18 +64,18 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - ✅ Refactor `JsonLoader`, `NPCManager`, `NPC`
 - ✅ Refactor `UITooltip` art, refactor + design
 
-- Refactor dialogues UI and put some art
-- Add some art on the bubble chat prefab
-- Add some art to the chat canvas
-- Add some art on the dialogues view chat
+- ✅ Refactor dialogues UI and put some art
+- ✅ Add some art on the bubble chat prefab
+- ✅ Add some art to the chat canvas
+- ✅ Add some art on the dialogues view chat
 
 
 ---
 
 ## **Week 3 – Random NPC Generator & Integration**
 
-- Set up Python `NPC_Generator` project  
-- Create folder structure for datasets: `cultures`, `names`, `traits`, `misc`  
+- ✅ Set up Python `NPC_Generator` project  
+- ✅ Create folder structure for datasets: `cultures`, `names`, `traits`, `misc`  
 
 - Implement **data preprocessing script**  
 - Merge datasets into `combined_npc_data.csv`  
@@ -83,13 +83,13 @@ This roadmap outlines the 3-week plan for building the **LoreForge AI NPC System
 - Implement **generator.py** to produce NPC JSONs from CSV  
 - Ensure JSON matches Unity schema  
 
-- Test generated NPCs in Unity  
-- Load multiple generated NPCs into scene  
-- Validate system prompt correctness  
+- ✅ Test generated NPCs in Unity  
+- ✅ Load multiple generated NPCs into scene  
+- ✅ Validate system prompt correctness  
 
 - Polish Python generator  
-- Document pipeline from dataset → CSV → JSON → Unity  
 - Prepare final demo scene  
+- Prepare presentation
 
 ---
 
