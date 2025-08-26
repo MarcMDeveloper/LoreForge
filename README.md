@@ -10,6 +10,7 @@
 LoreForge/
 ├── LICENSE
 ├── README.md
+├── Build
 ├── Echoes of the crowd/   # Unity Project
 │   ├── Assets/
 │   │   ├── Scripts/
