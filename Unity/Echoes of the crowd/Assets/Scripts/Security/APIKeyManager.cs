@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -8,12 +7,9 @@ using UnityEngine.Networking;
 /// <summary>
 /// Secure API Key Manager for WebGL builds
 /// 
-/// Setup Instructions:
-/// 1. Copy api_config_template.txt to api_config.txt
-/// 2. Add your OpenAI API key: API_KEY=sk-your-key-here
-/// 3. The api_config.txt file is automatically ignored by git
+/// Retrieves API keys from a secure worker endpoint
 /// 
-/// Alternative: Set OPENAI_API_KEY environment variable
+/// Alternative: Set OPENAI_API_KEY environment variable for development
 /// </summary>
 public class APIKeyManager : MonoBehaviour
 {
@@ -36,18 +32,23 @@ public class APIKeyManager : MonoBehaviour
         }
     }
 
-    // API key will be loaded from external source or environment
+    // API key will be loaded from worker or environment variable
     private string cachedAPIKey = null;
+    private bool isLoadingAPIKey = false;
+    private System.Action<string> pendingCallback = null;
 
     void Awake()
     {
+        Debug.Log("[APIKeyManager] Awake called");
         if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            Debug.Log("[APIKeyManager] Instance created and set as DontDestroyOnLoad");
         }
         else if (instance != this)
         {
+            Debug.Log("[APIKeyManager] Duplicate instance found, destroying this one");
             Destroy(gameObject);
         }
     }
@@ -56,6 +57,9 @@ public class APIKeyManager : MonoBehaviour
 
      public IEnumerator CallWorker(string jsonPayload, System.Action<string> onSuccess = null, System.Action<string> onError = null)
     {
+        Debug.Log($"[APIKeyManager] CallWorker called with payload: {jsonPayload}");
+        Debug.Log($"[APIKeyManager] Worker URL: {workerUrl}");
+
         using (UnityWebRequest req = new UnityWebRequest(workerUrl, "POST"))
         {
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
@@ -63,98 +67,174 @@ public class APIKeyManager : MonoBehaviour
             req.downloadHandler = new DownloadHandlerBuffer();
             req.SetRequestHeader("Content-Type", "application/json");
 
+            Debug.Log($"[APIKeyManager] UnityWebRequest created with body length: {bodyRaw.Length}");
+            Debug.Log($"[APIKeyManager] Request headers: Content-Type = {req.GetRequestHeader("Content-Type")}");
+
             yield return req.SendWebRequest();
+
+            Debug.Log($"[APIKeyManager] UnityWebRequest completed");
+            Debug.Log($"[APIKeyManager] Result: {req.result}");
+            Debug.Log($"[APIKeyManager] Response code: {req.responseCode}");
+            Debug.Log($"[APIKeyManager] Error: {req.error}");
+            Debug.Log($"[APIKeyManager] Response text length: {req.downloadHandler.text?.Length ?? 0}");
 
             if (req.result != UnityWebRequest.Result.Success)
             {
                 string errorMsg = $"Worker call failed: {req.error} | code: {req.responseCode} | body: {req.downloadHandler.text}";
-                Debug.LogError(errorMsg);
+                Debug.LogError($"[APIKeyManager] {errorMsg}");
                 onError?.Invoke(errorMsg);
             }
             else
             {
                 string response = req.downloadHandler.text;
-                Debug.Log($"Worker success: {response}");
+                Debug.Log($"[APIKeyManager] Worker success: {response.Substring(0, Math.Min(100, response.Length))}...");
+                Debug.Log($"[APIKeyManager] Full worker response: {response}");
                 onSuccess?.Invoke(response);
             }
         }
     }
     
     /// <summary>
-    /// Gets the API key from secure storage via worker
+    /// Gets the API key from secure storage via worker (asynchronous)
     /// </summary>
-    /// <returns>The API key</returns>
+    /// <param name="callback">Callback with the API key or null if failed</param>
+    public void GetAPIKeyAsync(System.Action<string> callback)
+    {
+        Debug.Log("[APIKeyManager] GetAPIKeyAsync called");
+        Debug.Log($"[APIKeyManager] Current cachedAPIKey: {(cachedAPIKey != null ? $"Length: {cachedAPIKey.Length}, Starts with: {cachedAPIKey.Substring(0, Math.Min(10, cachedAPIKey.Length))}" : "null")}");
+        Debug.Log($"[APIKeyManager] isLoadingAPIKey: {isLoadingAPIKey}");
+        Debug.Log($"[APIKeyManager] pendingCallback: {(pendingCallback != null ? "exists" : "null")}");
+        
+        // If we already have the key cached, return it immediately
+        if (cachedAPIKey != null)
+        {
+            Debug.Log("[APIKeyManager] Using cached API key");
+            callback?.Invoke(cachedAPIKey);
+            return;
+        }
+
+        // Check if security is compromised
+        if (WebGLSecurityManager.Instance != null && WebGLSecurityManager.Instance.IsSecurityCompromised())
+        {
+            Debug.LogError("[APIKeyManager] Security compromised - API key access denied");
+            callback?.Invoke(null);
+            return;
+        }
+
+        // Try to load from PlayerPrefs first (for development)
+        string fallbackKey = PlayerPrefs.GetString("OPENAI_API_KEY", "");
+        Debug.Log($"[APIKeyManager] PlayerPrefs check: {(fallbackKey != null ? $"Found, length: {fallbackKey.Length}" : "Not found")}");
+        if (!string.IsNullOrEmpty(fallbackKey))
+        {
+            Debug.Log("[APIKeyManager] Using PlayerPrefs API key");
+            cachedAPIKey = fallbackKey;
+            callback?.Invoke(cachedAPIKey);
+            return;
+        }
+
+        // If already loading, add to pending callbacks
+        if (isLoadingAPIKey)
+        {
+            Debug.Log("[APIKeyManager] API key already loading, adding to pending callbacks");
+            pendingCallback = callback;
+            return;
+        }
+
+        // Start loading from worker
+        Debug.Log("[APIKeyManager] Starting to load API key from worker");
+        isLoadingAPIKey = true;
+        StartCoroutine(GetAPIKeyFromWorker(callback));
+    }
+
+    /// <summary>
+    /// Synchronous version - returns cached key or null (for backward compatibility)
+    /// </summary>
+    /// <returns>The cached API key or null if not loaded yet</returns>
     public string GetAPIKey()
     {
-        try
-        {
-            // Check if security is compromised
-            if (WebGLSecurityManager.Instance != null && WebGLSecurityManager.Instance.IsSecurityCompromised())
-            {
-                Debug.LogError("Security compromised - API key access denied");
-                return null;
-            }
-
-            if (cachedAPIKey != null)
-                return cachedAPIKey;
-
-            // Try to load from environment variable first (for development)
-            string envKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-            if (!string.IsNullOrEmpty(envKey))
-            {
-                cachedAPIKey = envKey;
-                return cachedAPIKey;
-            }
-
-            // Use worker to retrieve API key
-            StartCoroutine(GetAPIKeyFromWorker());
-            
-            // Return cached key if available, otherwise return null
-            // The worker will update cachedAPIKey when it completes
-            return cachedAPIKey;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Error retrieving API key: {e.Message}");
-            return null;
-        }
+        Debug.Log($"[APIKeyManager] GetAPIKey called - returning cached key: {(cachedAPIKey != null ? $"Length: {cachedAPIKey.Length}" : "null")}");
+        return cachedAPIKey;
     }
 
     /// <summary>
     /// Coroutine to get API key from worker
     /// </summary>
-    private IEnumerator GetAPIKeyFromWorker()
+    private IEnumerator GetAPIKeyFromWorker(System.Action<string> callback)
     {
+        Debug.Log("[APIKeyManager] Starting GetAPIKeyFromWorker coroutine");
+        
         // Create request payload for API key
         string jsonPayload = "{\"action\":\"get_api_key\"}";
+        Debug.Log($"[APIKeyManager] JSON payload: {jsonPayload}");
         
         yield return StartCoroutine(CallWorker(jsonPayload, 
             onSuccess: (response) => {
+                Debug.Log($"[APIKeyManager] Worker success callback received: {response?.Substring(0, Math.Min(50, response?.Length ?? 0))}...");
                 try
                 {
                     // Parse the response to extract the API key
-                    // Assuming the worker returns JSON like: {"api_key": "sk-..."}
-                    // You may need to adjust this based on your worker's response format
                     if (response.Contains("api_key"))
                     {
+                        Debug.Log("[APIKeyManager] Response contains api_key field");
                         // Simple parsing - you might want to use a proper JSON parser
                         int startIndex = response.IndexOf("\"api_key\":\"") + 11;
                         int endIndex = response.IndexOf("\"", startIndex);
+                        Debug.Log($"[APIKeyManager] Parsing indices: start={startIndex}, end={endIndex}");
                         if (startIndex > 10 && endIndex > startIndex)
                         {
                             string apiKey = response.Substring(startIndex, endIndex - startIndex);
                             cachedAPIKey = apiKey;
-                            Debug.Log("API key retrieved from worker successfully");
+                            Debug.Log($"[APIKeyManager] API key retrieved successfully: {apiKey.Substring(0, Math.Min(10, apiKey.Length))}...");
+                            Debug.Log($"[APIKeyManager] API key full length: {apiKey.Length}");
+                            callback?.Invoke(apiKey);
                         }
+                        else
+                        {
+                            Debug.LogError("[APIKeyManager] Failed to parse API key from response");
+                            Debug.LogError($"[APIKeyManager] Response content: {response}");
+                            callback?.Invoke(null);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("[APIKeyManager] Response does not contain api_key field");
+                        Debug.LogError($"[APIKeyManager] Full response: {response}");
+                        callback?.Invoke(null);
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Error parsing API key from worker response: {e.Message}");
+                    Debug.LogError($"[APIKeyManager] Error parsing API key from worker response: {e.Message}");
+                    Debug.LogError($"[APIKeyManager] Exception stack trace: {e.StackTrace}");
+                    callback?.Invoke(null);
+                }
+                finally
+                {
+                    isLoadingAPIKey = false;
+                    Debug.Log("[APIKeyManager] isLoadingAPIKey set to false");
+                    // Handle any pending callbacks
+                    if (pendingCallback != null)
+                    {
+                        Debug.Log("[APIKeyManager] Handling pending callback");
+                        var pending = pendingCallback;
+                        pendingCallback = null;
+                        pending(cachedAPIKey);
+                    }
                 }
             },
             onError: (error) => {
-                Debug.LogError($"Failed to get API key from worker: {error}");
+                Debug.LogError($"[APIKeyManager] Worker error callback: {error}");
+                isLoadingAPIKey = false;
+                Debug.Log("[APIKeyManager] isLoadingAPIKey set to false due to error");
+                callback?.Invoke(null);
+                // Handle any pending callbacks
+                if (pendingCallback != null)
+                {
+                    Debug.Log("[APIKeyManager] Handling pending callback after error");
+                    var pending = pendingCallback;
+                    pendingCallback = null;
+                    pending(null);
+                }
             }
         ));
     }
@@ -166,7 +246,9 @@ public class APIKeyManager : MonoBehaviour
     public bool HasAPIKey()
     {
         string apiKey = GetAPIKey();
-        return !string.IsNullOrEmpty(apiKey);
+        bool hasKey = !string.IsNullOrEmpty(apiKey);
+        Debug.Log($"[APIKeyManager] HasAPIKey called - result: {hasKey}");
+        return hasKey;
     }
 
     /// <summary>
@@ -176,22 +258,136 @@ public class APIKeyManager : MonoBehaviour
     public bool ValidateAPIKeyFormat()
     {
         string apiKey = GetAPIKey();
+        
+        Debug.Log($"[APIKeyManager] ValidateAPIKeyFormat called");
+        Debug.Log($"[APIKeyManager] API key is null/empty: {string.IsNullOrEmpty(apiKey)}");
+        
         if (string.IsNullOrEmpty(apiKey))
+        {
+            Debug.Log("[APIKeyManager] API key is null or empty - validation failed");
             return false;
+        }
 
-        // OpenAI API keys typically start with "sk-" and are 51 characters long
-        return apiKey.StartsWith("sk-") && apiKey.Length >= 50;
+        Debug.Log($"[APIKeyManager] API key length: {apiKey.Length}");
+        Debug.Log($"[APIKeyManager] API key starts with sk-: {apiKey.StartsWith("sk-")}");
+        Debug.Log($"[APIKeyManager] API key length >= 50: {apiKey.Length >= 50}");
+
+        // Check if it's a base64 encoded key (from worker) or raw OpenAI key
+        if (apiKey.StartsWith("sk-") && apiKey.Length >= 50)
+        {
+            Debug.Log("[APIKeyManager] API key is valid OpenAI format");
+            return true;
+        }
+        else if (apiKey.Length >= 50 && IsBase64String(apiKey))
+        {
+            Debug.Log("[APIKeyManager] API key is valid base64 format");
+            return true;
+        }
+        
+        Debug.Log("[APIKeyManager] API key format validation failed");
+        return false;
     }
 
-    // Legacy methods for compatibility
-    public void SetAPIKey(string apiKey)
+    /// <summary>
+    /// Checks if a string is valid base64
+    /// </summary>
+    private bool IsBase64String(string base64)
     {
-        Debug.LogWarning("SetAPIKey is not supported in this build. API key must be set externally.");
+        try
+        {
+            Convert.FromBase64String(base64);
+            Debug.Log("[APIKeyManager] Base64 validation successful");
+            return true;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[APIKeyManager] Base64 validation failed: {e.Message}");
+            return false;
+        }
     }
 
+    /// <summary>
+    /// Clears the cached API key
+    /// </summary>
     public void ClearAPIKey()
     {
+        Debug.Log("[APIKeyManager] ClearAPIKey called");
         cachedAPIKey = null;
+        isLoadingAPIKey = false;
+        pendingCallback = null;
+        Debug.Log("[APIKeyManager] All API key data cleared");
+    }
 
+    /// <summary>
+    /// Test method to verify worker connectivity
+    /// </summary>
+    public void TestWorkerConnectivity()
+    {
+        Debug.Log("[APIKeyManager] TestWorkerConnectivity called");
+        StartCoroutine(TestWorkerConnectivityCoroutine());
+    }
+
+    private IEnumerator TestWorkerConnectivityCoroutine()
+    {
+        Debug.Log("[APIKeyManager] TestWorkerConnectivityCoroutine started");
+        
+        // Test health check endpoint
+        using (UnityWebRequest req = new UnityWebRequest(workerUrl, "GET"))
+        {
+            req.downloadHandler = new DownloadHandlerBuffer();
+            
+            Debug.Log($"[APIKeyManager] Testing worker health check at: {workerUrl}");
+            yield return req.SendWebRequest();
+            
+            Debug.Log($"[APIKeyManager] Health check result: {req.result}");
+            Debug.Log($"[APIKeyManager] Health check response code: {req.responseCode}");
+            Debug.Log($"[APIKeyManager] Health check response: {req.downloadHandler.text}");
+            
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("[APIKeyManager] Worker health check SUCCESS");
+            }
+            else
+            {
+                Debug.LogError($"[APIKeyManager] Worker health check FAILED: {req.error}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Test method specifically for localhost debugging
+    /// </summary>
+    public void TestWorkerLocalhost()
+    {
+        Debug.Log("[APIKeyManager] TestWorkerLocalhost called");
+        StartCoroutine(TestWorkerLocalhostCoroutine());
+    }
+
+    private IEnumerator TestWorkerLocalhostCoroutine()
+    {
+        Debug.Log("[APIKeyManager] TestWorkerLocalhostCoroutine started");
+        
+        // Test the new test endpoint
+        string testUrl = workerUrl + "/test";
+        using (UnityWebRequest req = new UnityWebRequest(testUrl, "GET"))
+        {
+            req.downloadHandler = new DownloadHandlerBuffer();
+            
+            Debug.Log($"[APIKeyManager] Testing worker test endpoint at: {testUrl}");
+            yield return req.SendWebRequest();
+            
+            Debug.Log($"[APIKeyManager] Test endpoint result: {req.result}");
+            Debug.Log($"[APIKeyManager] Test endpoint response code: {req.responseCode}");
+            Debug.Log($"[APIKeyManager] Test endpoint response: {req.downloadHandler.text}");
+            
+            if (req.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("[APIKeyManager] Worker test endpoint SUCCESS");
+            }
+            else
+            {
+                Debug.LogError($"[APIKeyManager] Worker test endpoint FAILED: {req.error}");
+            }
+        }
     }
 }

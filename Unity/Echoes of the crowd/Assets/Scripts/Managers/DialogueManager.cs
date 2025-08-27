@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -334,16 +335,16 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    private string GetNPCResponse(NPC npc, string speakerName, string message)
+    private async Task<string> GetNPCResponse(NPC npc, string speakerName, string message)
     {
         try
         {
             // Format the message to include who is speaking
             string formattedMessage = $"{speakerName} says: {message}";
-            npc.agent.SendPrompt(formattedMessage);
+            await npc.agent.SendPrompt(formattedMessage);
             
             // Wait a moment for the agent to process
-            System.Threading.Thread.Sleep(500);
+            await Task.Delay(500);
             
             // Get the response
             string response = npc.agent.GetLastMessage();

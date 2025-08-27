@@ -148,10 +148,21 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IP
     #region Helper Functions
     public void CreateAgent()
     {
-        if (data == null) return;
+        Debug.Log($"[NPC] *** CreateAgent CALLED ***");
         
+        if (data == null) 
+        {
+            Debug.LogError($"[NPC] CreateAgent: data is null!");
+            return;
+        }
+        
+        Debug.Log($"[NPC] Creating agent for: {data.name}");
         string systemPrompt = GetCachedSystemPrompt();
+        Debug.Log($"[NPC] System prompt length: {systemPrompt?.Length ?? 0}");
+        
+        Debug.Log($"[NPC] *** ABOUT TO CREATE NEW AGENT ***");
         agent = new Agent(systemPrompt, data.name);
+        Debug.Log($"[NPC] *** AGENT CREATED SUCCESSFULLY ***");
     }
 
     // Memory management: Static prompt caching

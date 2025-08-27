@@ -50,7 +50,7 @@ public static class JsonLoader
 {
     public static async Task<NPCList> LoadFromStreamingAssets(string filePath)
     {
-        string fullPath = System.IO.Path.Combine(Application.streamingAssetsPath, filePath);
+        string fullPath = Application.streamingAssetsPath + "/" + filePath;
         
         using (var request = new UnityEngine.Networking.UnityWebRequest(fullPath))
         {
