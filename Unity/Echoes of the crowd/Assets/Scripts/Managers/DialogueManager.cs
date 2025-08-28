@@ -21,6 +21,11 @@ public class DialogueManager : MonoBehaviour
     public GameObject closeButton;
     public GameObject inputBar;
 
+    [Header("Dialogue")]
+    public GameObject dialogueBubblePrefab;
+    public GameObject dialoguePanel;
+    public Transform dialoguePanelContent; // Transform to hold the dialogue bubbles
+
     [Header("NPC")]
     public List<NPC> npcsInChat;
 
@@ -56,6 +61,15 @@ public class DialogueManager : MonoBehaviour
 
         // Keep this object alive between scenes
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        // Refresh dialogue bubbles if there are existing conversations
+        if (allConversations.Count > 0)
+        {
+            RefreshDialogueBubbles();
+        }
     }
     #endregion
 
@@ -112,7 +126,7 @@ public class DialogueManager : MonoBehaviour
         // npc.agent = new Agent(npc.CreateSystemPrompt());
 
         inputBar.SetActive(true);
-        
+
         // Clear current conversation messages
         currentConversationMessages.Clear();
 
@@ -380,6 +394,107 @@ public class DialogueManager : MonoBehaviour
     }
     #endregion
 
+    #region Dialogue Bubble Management
+    /// <summary>
+    /// Creates a dialogue bubble in the dialogue panel for a saved conversation
+    /// </summary>
+    /// <param name="conversationIndex">Index of the conversation</param>
+    /// <param name="conversationData">The conversation data</param>
+    private void CreateDialogueBubble(int conversationIndex, ConversationData conversationData)
+    {
+        if (dialogueBubblePrefab == null || dialoguePanelContent == null)
+        {
+            Debug.LogWarning("Dialogue bubble prefab or content transform not assigned!");
+            return;
+        }
+
+        // Instantiate the dialogue bubble
+        GameObject bubbleObject = Instantiate(dialogueBubblePrefab, dialoguePanelContent);
+        DialogueBubbleBehaviour bubbleBehaviour = bubbleObject.GetComponent<DialogueBubbleBehaviour>();
+        
+        if (bubbleBehaviour == null)
+        {
+            Debug.LogError("DialogueBubbleBehaviour component not found on prefab!");
+            Destroy(bubbleObject);
+            return;
+        }
+
+        // Generate participants string for the conversation
+        string participants = GenerateConversationParticipants(conversationData);
+
+        // Initialize the bubble
+        bubbleBehaviour.InitializeBubble(conversationIndex, participants);
+        
+        Debug.Log($"Created dialogue bubble for conversation {conversationIndex}: {participants}");
+    }
+
+    /// <summary>
+    /// Generates a simple participants string for the conversation (e.g., "Name1 to Name2")
+    /// </summary>
+    /// <param name="conversationData">The conversation data</param>
+    /// <returns>Participants string</returns>
+    private string GenerateConversationParticipants(ConversationData conversationData)
+    {
+        if (conversationData.messages.Count == 0)
+            return "Empty Conversation";
+
+        // Get unique participants (excluding system messages)
+        HashSet<string> participants = new HashSet<string>();
+        foreach (var message in conversationData.messages)
+        {
+            if (message.role != "system" && !string.IsNullOrEmpty(message.role))
+            {
+                participants.Add(message.role);
+            }
+        }
+
+        if (participants.Count == 0)
+        {
+            return "User Conversation";
+        }
+        else if (participants.Count == 1)
+        {
+            return $"User to {string.Join("", participants)}";
+        }
+        else
+        {
+            // Convert to list and sort for consistent ordering
+            List<string> participantList = new List<string>(participants);
+            participantList.Sort();
+            
+            // Format as "Name1 to Name2"
+            return $"{participantList[0]} to {participantList[1]}";
+        }
+    }
+
+    /// <summary>
+    /// Clears all dialogue bubbles from the panel
+    /// </summary>
+    public void ClearDialogueBubbles()
+    {
+        if (dialoguePanelContent == null)
+            return;
+
+        foreach (Transform child in dialoguePanelContent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Refreshes all dialogue bubbles (useful when loading saved conversations)
+    /// </summary>
+    public void RefreshDialogueBubbles()
+    {
+        ClearDialogueBubbles();
+        
+        for (int i = 0; i < allConversations.Count; i++)
+        {
+            CreateDialogueBubble(i, allConversations[i]);
+        }
+    }
+    #endregion
+
     #region Dialogues management
     public void LoadChat(int firstID, int secondID)
     {
@@ -412,6 +527,9 @@ public class DialogueManager : MonoBehaviour
         
         // Add to all conversations
         allConversations.Add(conversationData);
+        
+        // Create dialogue bubble for this conversation
+        CreateDialogueBubble(allConversations.Count - 1, conversationData);
         
         // Update inspector debug info
         UpdateInspectorDebugInfo();
@@ -546,6 +664,15 @@ public class DialogueManager : MonoBehaviour
     {
         UpdateInspectorDebugInfo();
     }
+
+    /// <summary>
+    /// Manually refresh all dialogue bubbles
+    /// </summary>
+    [ContextMenu("Refresh Dialogue Bubbles")]
+    public void RefreshDialogueBubblesManual()
+    {
+        RefreshDialogueBubbles();
+    }
     
     /// <summary>
     /// Clear all saved conversations (for testing)
@@ -554,6 +681,7 @@ public class DialogueManager : MonoBehaviour
     public void ClearAllConversations()
     {
         allConversations.Clear();
+        ClearDialogueBubbles();
         UpdateInspectorDebugInfo();
         Debug.Log("All conversations cleared.");
     }

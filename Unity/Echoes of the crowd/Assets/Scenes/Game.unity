@@ -272,6 +272,9 @@ MonoBehaviour:
   scrollRect: {fileID: 1660790032}
   closeButton: {fileID: 1849613090}
   inputBar: {fileID: 800659381}
+  dialogueBubblePrefab: {fileID: 8123025960996999264, guid: 3b6032d76fb70d74e80df762ff39ab61, type: 3}
+  dialoguePanel: {fileID: 314603150}
+  dialoguePanelContent: {fileID: 314603151}
   npcsInChat: []
   allConversations: []
   totalConversations: 0
@@ -700,7 +703,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -276, y: 420.70816}
+  m_AnchoredPosition: {x: -276, y: 420.7082}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &314603152
@@ -3322,9 +3325,9 @@ RectTransform:
   - {fileID: 1811260306}
   - {fileID: 2007782361}
   - {fileID: 1671486707}
+  - {fileID: 921347273}
   - {fileID: 2136586393}
   - {fileID: 688425687}
-  - {fileID: 921347273}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
