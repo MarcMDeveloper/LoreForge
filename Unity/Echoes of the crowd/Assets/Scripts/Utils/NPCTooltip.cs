@@ -122,7 +122,7 @@ public class NPCTooltip : MonoBehaviour
         // Try to load portrait from Resources
         if (!string.IsNullOrEmpty(npcData.portraitPath))
         {
-            Sprite portraitSprite = Resources.Load<Sprite>(npcData.portraitPath);
+            Sprite portraitSprite = npcData.GetPortrait();
             if (portraitSprite != null)
             {
                 portraitImage.sprite = portraitSprite;

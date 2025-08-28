@@ -39,7 +39,6 @@ public class APIKeyManager : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("[APIKeyManager] Awake called");
         if (instance == null)
         {
             instance = this;
@@ -57,9 +56,6 @@ public class APIKeyManager : MonoBehaviour
 
      public IEnumerator CallWorker(string jsonPayload, System.Action<string> onSuccess = null, System.Action<string> onError = null)
     {
-        Debug.Log($"[APIKeyManager] CallWorker called with payload: {jsonPayload}");
-        Debug.Log($"[APIKeyManager] Worker URL: {workerUrl}");
-
         using (UnityWebRequest req = new UnityWebRequest(workerUrl, "POST"))
         {
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
@@ -67,16 +63,7 @@ public class APIKeyManager : MonoBehaviour
             req.downloadHandler = new DownloadHandlerBuffer();
             req.SetRequestHeader("Content-Type", "application/json");
 
-            Debug.Log($"[APIKeyManager] UnityWebRequest created with body length: {bodyRaw.Length}");
-            Debug.Log($"[APIKeyManager] Request headers: Content-Type = {req.GetRequestHeader("Content-Type")}");
-
             yield return req.SendWebRequest();
-
-            Debug.Log($"[APIKeyManager] UnityWebRequest completed");
-            Debug.Log($"[APIKeyManager] Result: {req.result}");
-            Debug.Log($"[APIKeyManager] Response code: {req.responseCode}");
-            Debug.Log($"[APIKeyManager] Error: {req.error}");
-            Debug.Log($"[APIKeyManager] Response text length: {req.downloadHandler.text?.Length ?? 0}");
 
             if (req.result != UnityWebRequest.Result.Success)
             {
@@ -99,16 +86,10 @@ public class APIKeyManager : MonoBehaviour
     /// </summary>
     /// <param name="callback">Callback with the API key or null if failed</param>
     public void GetAPIKeyAsync(System.Action<string> callback)
-    {
-        Debug.Log("[APIKeyManager] GetAPIKeyAsync called");
-        Debug.Log($"[APIKeyManager] Current cachedAPIKey: {(cachedAPIKey != null ? $"Length: {cachedAPIKey.Length}, Starts with: {cachedAPIKey.Substring(0, Math.Min(10, cachedAPIKey.Length))}" : "null")}");
-        Debug.Log($"[APIKeyManager] isLoadingAPIKey: {isLoadingAPIKey}");
-        Debug.Log($"[APIKeyManager] pendingCallback: {(pendingCallback != null ? "exists" : "null")}");
-        
+    {        
         // If we already have the key cached, return it immediately
         if (cachedAPIKey != null)
         {
-            Debug.Log("[APIKeyManager] Using cached API key");
             callback?.Invoke(cachedAPIKey);
             return;
         }
@@ -123,10 +104,8 @@ public class APIKeyManager : MonoBehaviour
 
         // Try to load from PlayerPrefs first (for development)
         string fallbackKey = PlayerPrefs.GetString("OPENAI_API_KEY", "");
-        Debug.Log($"[APIKeyManager] PlayerPrefs check: {(fallbackKey != null ? $"Found, length: {fallbackKey.Length}" : "Not found")}");
         if (!string.IsNullOrEmpty(fallbackKey))
         {
-            Debug.Log("[APIKeyManager] Using PlayerPrefs API key");
             cachedAPIKey = fallbackKey;
             callback?.Invoke(cachedAPIKey);
             return;
@@ -135,13 +114,11 @@ public class APIKeyManager : MonoBehaviour
         // If already loading, add to pending callbacks
         if (isLoadingAPIKey)
         {
-            Debug.Log("[APIKeyManager] API key already loading, adding to pending callbacks");
             pendingCallback = callback;
             return;
         }
 
         // Start loading from worker
-        Debug.Log("[APIKeyManager] Starting to load API key from worker");
         isLoadingAPIKey = true;
         StartCoroutine(GetAPIKeyFromWorker(callback));
     }
@@ -152,7 +129,6 @@ public class APIKeyManager : MonoBehaviour
     /// <returns>The cached API key or null if not loaded yet</returns>
     public string GetAPIKey()
     {
-        Debug.Log($"[APIKeyManager] GetAPIKey called - returning cached key: {(cachedAPIKey != null ? $"Length: {cachedAPIKey.Length}" : "null")}");
         return cachedAPIKey;
     }
 
@@ -161,15 +137,12 @@ public class APIKeyManager : MonoBehaviour
     /// </summary>
     private IEnumerator GetAPIKeyFromWorker(System.Action<string> callback)
     {
-        Debug.Log("[APIKeyManager] Starting GetAPIKeyFromWorker coroutine");
         
         // Create request payload for API key
         string jsonPayload = "{\"action\":\"get_api_key\"}";
-        Debug.Log($"[APIKeyManager] JSON payload: {jsonPayload}");
         
         yield return StartCoroutine(CallWorker(jsonPayload, 
             onSuccess: (response) => {
-                Debug.Log($"[APIKeyManager] Worker success callback received: {response?.Substring(0, Math.Min(50, response?.Length ?? 0))}...");
                 try
                 {
                     // Parse the response to extract the API key
@@ -179,13 +152,10 @@ public class APIKeyManager : MonoBehaviour
                         // Simple parsing - you might want to use a proper JSON parser
                         int startIndex = response.IndexOf("\"api_key\":\"") + 11;
                         int endIndex = response.IndexOf("\"", startIndex);
-                        Debug.Log($"[APIKeyManager] Parsing indices: start={startIndex}, end={endIndex}");
                         if (startIndex > 10 && endIndex > startIndex)
                         {
                             string apiKey = response.Substring(startIndex, endIndex - startIndex);
                             cachedAPIKey = apiKey;
-                            Debug.Log($"[APIKeyManager] API key retrieved successfully: {apiKey.Substring(0, Math.Min(10, apiKey.Length))}...");
-                            Debug.Log($"[APIKeyManager] API key full length: {apiKey.Length}");
                             callback?.Invoke(apiKey);
                         }
                         else
@@ -247,7 +217,6 @@ public class APIKeyManager : MonoBehaviour
     {
         string apiKey = GetAPIKey();
         bool hasKey = !string.IsNullOrEmpty(apiKey);
-        Debug.Log($"[APIKeyManager] HasAPIKey called - result: {hasKey}");
         return hasKey;
     }
 
@@ -258,33 +227,23 @@ public class APIKeyManager : MonoBehaviour
     public bool ValidateAPIKeyFormat()
     {
         string apiKey = GetAPIKey();
-        
-        Debug.Log($"[APIKeyManager] ValidateAPIKeyFormat called");
-        Debug.Log($"[APIKeyManager] API key is null/empty: {string.IsNullOrEmpty(apiKey)}");
-        
+                
         if (string.IsNullOrEmpty(apiKey))
         {
             Debug.Log("[APIKeyManager] API key is null or empty - validation failed");
             return false;
         }
 
-        Debug.Log($"[APIKeyManager] API key length: {apiKey.Length}");
-        Debug.Log($"[APIKeyManager] API key starts with sk-: {apiKey.StartsWith("sk-")}");
-        Debug.Log($"[APIKeyManager] API key length >= 50: {apiKey.Length >= 50}");
-
         // Check if it's a base64 encoded key (from worker) or raw OpenAI key
         if (apiKey.StartsWith("sk-") && apiKey.Length >= 50)
         {
-            Debug.Log("[APIKeyManager] API key is valid OpenAI format");
             return true;
         }
         else if (apiKey.Length >= 50 && IsBase64String(apiKey))
         {
-            Debug.Log("[APIKeyManager] API key is valid base64 format");
             return true;
         }
         
-        Debug.Log("[APIKeyManager] API key format validation failed");
         return false;
     }
 
@@ -296,7 +255,6 @@ public class APIKeyManager : MonoBehaviour
         try
         {
             Convert.FromBase64String(base64);
-            Debug.Log("[APIKeyManager] Base64 validation successful");
             return true;
         }
         catch (Exception e)
@@ -311,11 +269,9 @@ public class APIKeyManager : MonoBehaviour
     /// </summary>
     public void ClearAPIKey()
     {
-        Debug.Log("[APIKeyManager] ClearAPIKey called");
         cachedAPIKey = null;
         isLoadingAPIKey = false;
         pendingCallback = null;
-        Debug.Log("[APIKeyManager] All API key data cleared");
     }
 
     /// <summary>

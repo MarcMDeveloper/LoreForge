@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using TMPro;
 
 [System.Serializable]
@@ -24,6 +25,8 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IP
     private float lastClickTime;
     private const float CLICK_COOLDOWN = 0.5f;
 
+    private Sprite defaultPortrait;
+
     #endregion
 
     #region Initialization
@@ -37,7 +40,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IP
         if (npcData.personality.extraversion < 0f || npcData.personality.extraversion > 1f) return;
         if (npcData.personality.agreeableness < 0f || npcData.personality.agreeableness > 1f) return;
         if (npcData.personality.neuroticism < 0f || npcData.personality.neuroticism > 1f) return;
-        
+
         data = npcData;
         CreateAgent();
         UpdateUI();
@@ -64,25 +67,53 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IP
         }
     }
 
+    public Sprite GetPortrait()
+    {
+        return defaultPortrait;
+    }
     private IEnumerator LoadPortraitSafely(string portraitPath)
     {
         if (string.IsNullOrEmpty(portraitPath) || portraitImage == null)
             yield break;
-        
-        // Try to load portrait from Resources
-        var portraitSprite = Resources.Load<Sprite>(portraitPath);
-        if (portraitSprite != null)
+
+        // For WebGL builds, load from StreamingAssets
+        string fullPath = System.IO.Path.Combine(Application.streamingAssetsPath, portraitPath);
+
+        // Check if file exists
+        if (!System.IO.File.Exists(fullPath))
         {
-            portraitImage.sprite = portraitSprite;
-            portraitImage.gameObject.SetActive(true);
-        }
-        else
-        {
-            // If no portrait found, hide the portrait image
+            Debug.LogWarning($"[NPC] Portrait file not found at: {fullPath}");
             portraitImage.gameObject.SetActive(false);
+            yield break;
         }
-        
-        yield return null;
+
+        // Load image from StreamingAssets
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture("file://" + fullPath))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                if (texture != null)
+                {
+                    // Create sprite from texture
+                    defaultPortrait = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                    portraitImage.sprite = defaultPortrait;
+                    portraitImage.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.LogError($"[NPC] Failed to create texture from: {fullPath}");
+                    portraitImage.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                Debug.LogError($"[NPC] Failed to load portrait: {www.error}");
+                portraitImage.gameObject.SetActive(false);
+            }
+        }
     }
     #endregion
 
@@ -147,22 +178,16 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IP
 
     #region Helper Functions
     public void CreateAgent()
-    {
-        Debug.Log($"[NPC] *** CreateAgent CALLED ***");
-        
+    {        
         if (data == null) 
         {
             Debug.LogError($"[NPC] CreateAgent: data is null!");
             return;
         }
         
-        Debug.Log($"[NPC] Creating agent for: {data.name}");
         string systemPrompt = GetCachedSystemPrompt();
-        Debug.Log($"[NPC] System prompt length: {systemPrompt?.Length ?? 0}");
         
-        Debug.Log($"[NPC] *** ABOUT TO CREATE NEW AGENT ***");
         agent = new Agent(systemPrompt, data.name);
-        Debug.Log($"[NPC] *** AGENT CREATED SUCCESSFULLY ***");
     }
 
     // Memory management: Static prompt caching
