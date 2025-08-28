@@ -8,13 +8,21 @@ using TMPro;
 public class DialogueManager : MonoBehaviour
 {
     #region Variables
+    
+    [Header("Chat UI Elements")]
     public GameObject ChatScreen;
     public TMP_InputField inputText;
-    public List<NPC> npcsInChat;
+
 
     public Transform contentTransform;
     public GameObject bubbleMessagePrefab;
     public ScrollRect scrollRect;
+
+    public GameObject closeButton;
+    public GameObject inputBar;
+
+    [Header("NPC")]
+    public List<NPC> npcsInChat;
 
     public List<ConversationData> allConversations;
     
@@ -103,6 +111,8 @@ public class DialogueManager : MonoBehaviour
         // Initialize the agent for this NPC
         // npc.agent = new Agent(npc.CreateSystemPrompt());
 
+        inputBar.SetActive(true);
+        
         // Clear current conversation messages
         currentConversationMessages.Clear();
 
@@ -192,7 +202,10 @@ public class DialogueManager : MonoBehaviour
 
     #region Chat NPC - NPC
     public void StartNPCtoNPCChat(NPC npcA, NPC npcB, string initialMessage)
-    {
+    {        
+        closeButton.SetActive(false);
+        inputBar.SetActive(false);
+
         // Clear current conversation messages
         currentConversationMessages.Clear();
         
@@ -290,6 +303,8 @@ public class DialogueManager : MonoBehaviour
         string endMessage = "The conversation has come to a natural conclusion.";
         AddMessage("System", endMessage, MessageType.Middle);
         
+        closeButton.SetActive(true);
+
         // Save the conversation
         SaveConversation();
         

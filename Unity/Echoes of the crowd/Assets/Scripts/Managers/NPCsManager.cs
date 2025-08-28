@@ -148,24 +148,29 @@ public class NPCsManager : MonoBehaviour
         }
     }
 
+    public void OnClickStartRandomConversation()
+    { 
+        int randomIndex1 = Random.Range(0, npcs.Count);
+        int randomIndex2;
+        do
+        {
+            randomIndex2 = Random.Range(0, npcs.Count);
+        } while (randomIndex2 == randomIndex1 && npcs.Count > 1);
+
+        // Get a random greeting message
+        string randomGreeting = GetRandomGreeting();
+        DialogueManager.Instance.StartNPCtoNPCChat(npcs[randomIndex1], npcs[randomIndex2], randomGreeting);
+    }
+
     private void Update()
     {
         // Empty for now - can be used for future functionality
-        if(Input.GetKeyDown(KeyCode.Alpha0))
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             // Select two random NPCs (ensuring they are different)
-            int randomIndex1 = Random.Range(0, npcs.Count);
-            int randomIndex2;
-            do
-            {
-                randomIndex2 = Random.Range(0, npcs.Count);
-            } while (randomIndex2 == randomIndex1 && npcs.Count > 1);
             
-            // Get a random greeting message
-            string randomGreeting = GetRandomGreeting();
-            DialogueManager.Instance.StartNPCtoNPCChat(npcs[randomIndex1], npcs[randomIndex2], randomGreeting);
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha1))
+        else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             DialogueManager.Instance.DisplaySavedConversation(0);
         }
