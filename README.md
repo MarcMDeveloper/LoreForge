@@ -13,7 +13,6 @@
 - **AI-Driven NPCs**: Every character is uniquely generated with personality traits, cultural backgrounds, and behavioral patterns
 - **Cultural Awareness**: Characters reflect diverse cultural norms, traditions, and communication styles
 - **Dynamic Dialogue**: Conversations that evolve based on context, relationship history, and cultural understanding
-- **Interactive World**: Explore a rich environment where every NPC has their own story to tell
 
 ## 🛠️ Technical Architecture
 
@@ -88,7 +87,6 @@ LoreForge/
 - **Memory System**: Your actions and choices are remembered by characters
 - **Cultural Context**: NPCs respond based on their cultural background
 - **Relationship Building**: Develop friendships, rivalries, or neutral relationships
-- **Dynamic World**: The environment and NPCs evolve based on your presence
 
 ## 🔧 Technical Requirements
 
@@ -98,10 +96,6 @@ LoreForge/
 - **Memory**: 4GB RAM minimum for optimal performance
 
 ---
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🎨 Credits & Assets
 
@@ -117,4 +111,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-**Experience the future of interactive storytelling with AI-driven characters in Echoes of the Crowd!**

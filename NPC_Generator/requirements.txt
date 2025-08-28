@@ -1,0 +1,28 @@
+# NPC Generator Requirements
+# Core dependencies for the NPC generation system
+
+# OpenAI API client for GPT and DALL-E integration
+openai>=1.0.0
+
+# HTTP requests for downloading generated images
+requests>=2.31.0
+
+# Standard library imports (built-in, no installation needed):
+# - uuid
+# - getpass  
+# - pathlib
+# - random
+# - typing
+# - json
+# - pprint
+
+# Optional but recommended for development:
+# Jupyter notebook support
+jupyter>=1.0.0
+ipykernel>=6.0.0
+
+# For better JSON handling and validation
+jsonschema>=4.0.0
+
+# For environment variable management (optional)
+python-dotenv>=1.0.0
