@@ -88,7 +88,7 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IP
         }
 
         // Load image from StreamingAssets
-        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture("file://" + fullPath))
+        using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(fullPath))
         {
             yield return www.SendWebRequest();
 

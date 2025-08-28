@@ -164,16 +164,7 @@ public class NPCsManager : MonoBehaviour
 
     private void Update()
     {
-        // Empty for now - can be used for future functionality
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            // Select two random NPCs (ensuring they are different)
-            
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            DialogueManager.Instance.DisplaySavedConversation(0);
-        }
+
     }
 
     private void OnDestroy()

@@ -91,7 +91,7 @@ public class NPCTooltip : MonoBehaviour
                $"<b><color=#{labelColorHex}>Age:</color></b> <color=#{valueColorHex}>{npcData.age}</color>\n" +
                $"<b><color=#{labelColorHex}>Culture:</color></b> <color=#{valueColorHex}>{npcData.culture}</color>\n" +
                $"<b><color=#{labelColorHex}>Traits:</color></b> <color=#{valueColorHex}>{FormatTraits(npcData.traits)}</color>\n" +
-               $"<b><color=#{labelColorHex}>Goal:</color></b> <color=#{valueColorHex}>{TruncateText(npcData.goal, 50)}</color>\n" +
+               $"<b><color=#{labelColorHex}>Goal:</color></b> <color=#{valueColorHex}>{TruncateText(npcData.goal, 150)}</color>\n" +
                $"<b><color=#{labelColorHex}>Occupation:</color></b> <color=#{valueColorHex}>{npcData.occupation}</color>\n" +
                $"<b><color=#{labelColorHex}>History:</color></b> <color=#{valueColorHex}>{TruncateText(npcData.briefHistory, 1000)}</color>";
     }
