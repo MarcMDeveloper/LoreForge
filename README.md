@@ -49,20 +49,10 @@ LoreForge/
 │       │   ├── TextMesh Pro/  # Text rendering
 │       │   └── Settings/      # Project settings
 │       └── ProjectSettings/
-├── NPC_Generator/         # Python NPC Generator
-│   ├── data_sources/      # Raw datasets
-│   │   ├── cultures/      # Cultural norms & behaviors
-│   │   ├── names/         # Culturally relevant names
-│   │   ├── traits/        # Personality archetypes
-│   │   └── misc/          # Extra (professions, factions, etc.)
-│   ├── processed_data/    # Cleaned & merged datasets
-│   │   └── combined_npc_data.csv
-│   ├── output_json/       # Generated NPC JSONs
-│   ├── generator.py       # JSON generation script
-│   ├── preprocess.py      # Dataset cleaning/merging
-│   ├── npc_schema.json    # JSON structure definition
-│   └── requirements.txt   # Python dependencies
-└── Docs/                  # Documentation & diagrams
+├── NPC_Generator/           # Python NPC Generator
+│   ├── npc_generator.ipynb  # JSON generation script
+│   └── requirements.txt     # Python dependencies
+└── Docs/                    # Documentation & diagrams
 ```
 
 ## 🚀 Getting Started

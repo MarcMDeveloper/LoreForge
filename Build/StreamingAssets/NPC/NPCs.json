@@ -1,252 +1,302 @@
 [
   {
-    "id": "npc_001",
-    "name": "Kael Veyrin",
+    "id": "npc_0e35f0dd",
+    "name": "Maris Tideweaver",
     "gender": "Male",
-    "age": 34,
-    "culture": "Northern European",
+    "age": 63,
+    "culture": "Seashell Elysium",
     "appearance": {
-      "hair_color": "blonde",
-      "eye_color": "blue",
+      "hair_color": "salt-and-pepper grey",
+      "eye_color": "seafoam green",
+      "height_cm": 178,
+      "build": "muscular and well-defined, with signs of wear on joints from years of service"
+    },
+    "personality": {
+      "openness": 0.45,
+      "conscientiousness": 0.6,
+      "extraversion": 0.4,
+      "agreeableness": 0.75,
+      "neuroticism": 0.7
+    },
+    "traits": [
+      "empathetic communicator",
+      "cautiously sociable",
+      "attentive collaborator",
+      "reflective peacemaker"
+    ],
+    "brief_history": "Maris Tideweaver, born amidst the vibrant coral reefs of Seashell Elysium, spent his youth sculpting intricate shells into art. His salt-and-pepper hair reflects years spent beneath the sun and surf, while his seafoam eyes mirror the depths of his dreams—dreams of uniting the disparate clans through shared cultural stories. At 63, weary joints testify to his life as a peacemaker, yet his heart remains buoyant. Now, as tides shift and unrest brews, Maris prepares a grand gathering, hoping to weave together old traditions with new visions, embracing change to preserve the harmony of his beloved home.",
+    "portrait": "portrait_Maris_Tideweaver.png",
+    "goal": "To honor his family's legacy, Maris strives to unite the clans through a grand storytelling festival that rekindles ancestral traditions and fosters lasting peace.",
+    "occupation": "Cultural Harmony Artisan"
+  },
+  {
+    "id": "npc_c3a8490c",
+    "name": "Elysara Veyril",
+    "gender": "Male",
+    "age": 24,
+    "culture": "Silkwind Archons",
+    "appearance": {
+      "hair_color": "midnight blue",
+      "eye_color": "emerald green",
       "height_cm": 182,
-      "build": "muscular"
-    },
-    "personality": {
-      "openness": 0.55,
-      "conscientiousness": 0.70,
-      "extraversion": 0.60,
-      "agreeableness": 0.50,
-      "neuroticism": 0.40
-    },
-    "traits": ["loyal", "disciplined", "protective"],
-    "brief_history": "Kael was raised in a coastal village, training with the local militia from a young age. He dreams of defending his homeland from invaders and making a name as a legendary warrior.",
-    "portrait": "temp.png",
-    "goal": "become captain of the guard",
-    "occupation": "Guard"
-  },
-  {
-    "id": "npc_002",
-    "name": "Liora Mei",
-    "gender": "Female",
-    "age": 22,
-    "culture": "East Asian",
-    "appearance": {
-      "hair_color": "dark brown",
-      "eye_color": "hazel",
-      "height_cm": 160,
-      "build": "slender"
-    },
-    "personality": {
-      "openness": 0.80,
-      "conscientiousness": 0.50,
-      "extraversion": 0.75,
-      "agreeableness": 0.65,
-      "neuroticism": 0.25
-    },
-    "traits": ["creative", "adventurous", "quick thinker"],
-    "brief_history": "Liora grew up in a city of scholars and artists. She has always loved exploring new ideas and places, often getting into trouble due to her curiosity and spontaneity.",
-    "portrait": "temp.png",
-    "goal": "become a renowned explorer",
-    "occupation": "Cartographer"
-  },
-  {
-    "id": "npc_003",
-    "name": "Dorian Kells",
-    "gender": "Male",
-    "age": 47,
-    "culture": "Mediterranean",
-    "appearance": {
-      "hair_color": "black",
-      "eye_color": "brown",
-      "height_cm": 175,
-      "build": "stocky"
-    },
-    "personality": {
-      "openness": 0.40,
-      "conscientiousness": 0.85,
-      "extraversion": 0.45,
-      "agreeableness": 0.60,
-      "neuroticism": 0.35
-    },
-    "traits": ["hardworking", "stubborn", "reliable"],
-    "brief_history": "Dorian spent most of his life tending vineyards passed down through generations. His dedication to tradition is both his strength and his weakness.",
-    "portrait": "temp.png",
-    "goal": "preserve his family’s legacy",
-    "occupation": "Vintner"
-  },
-  {
-    "id": "npc_004",
-    "name": "Selene Orlov",
-    "gender": "Female",
-    "age": 28,
-    "culture": "Eastern European",
-    "appearance": {
-      "hair_color": "platinum blonde",
-      "eye_color": "green",
-      "height_cm": 168,
-      "build": "athletic"
+      "build": "lean with a toned physique, reflecting an active lifestyle supported by noble training and courtly etiquette"
     },
     "personality": {
       "openness": 0.65,
-      "conscientiousness": 0.60,
+      "conscientiousness": 0.8,
       "extraversion": 0.55,
-      "agreeableness": 0.40,
-      "neuroticism": 0.50
+      "agreeableness": 0.9,
+      "neuroticism": 0.3
     },
-    "traits": ["determined", "resourceful", "guarded"],
-    "brief_history": "Selene grew up in a cold border town, where survival required strength and cunning. She has always sought independence from the expectations of her community.",
-    "portrait": "temp.png",
-    "goal": "earn enough wealth to travel freely",
-    "occupation": "Mercenary"
+    "traits": [
+      "curious innovator",
+      "empathetic strategist",
+      "meticulous problem-solver",
+      "harmonious communicator"
+    ],
+    "brief_history": "Elysara Veyril, born amidst the floating palaces of the Silkwind Archons, grew up in a culture steeped in elegance and innovation. Trained as a noble, his midnight blue hair and emerald eyes symbolized his lineage. However, as whispers of change ripple through his society—advancing technology clashing with age-old traditions—Elysara's empathetic nature drives him to bridge the gap. Embracing his role as an innovator, he now strategizes to harmonize progress with heritage, seeking solutions to unite the Archons while safeguarding their ethereal way of life.",
+    "portrait": "portrait_Elysara_Veyril.png",
+    "goal": "Elysara Veyril aims to establish an innovative community center that fuses technology and tradition, ensuring no Archon is left behind before his retirement.",
+    "occupation": "Aetheric Harmony Weaver"
   },
   {
-    "id": "npc_005",
-    "name": "Hassan Alim",
-    "gender": "Male",
-    "age": 31,
-    "culture": "Middle Eastern",
-    "appearance": {
-      "hair_color": "dark brown",
-      "eye_color": "amber",
-      "height_cm": 178,
-      "build": "lean"
-    },
-    "personality": {
-      "openness": 0.70,
-      "conscientiousness": 0.65,
-      "extraversion": 0.50,
-      "agreeableness": 0.75,
-      "neuroticism": 0.30
-    },
-    "traits": ["wise", "patient", "observant"],
-    "brief_history": "Hassan studied under scholars of philosophy and astronomy. Though calm by nature, he harbors a quiet ambition to discover the unknown.",
-    "portrait": "temp.png",
-    "goal": "chart the stars and publish a grand atlas",
-    "occupation": "Astronomer"
-  },
-  {
-    "id": "npc_006",
-    "name": "Isolde Brenn",
+    "id": "npc_c0362646",
+    "name": "Eldaer Thorneweaver",
     "gender": "Female",
-    "age": 39,
-    "culture": "Germanic",
+    "age": 73,
+    "culture": "Fjordwyn Kinfolk",
     "appearance": {
-      "hair_color": "red",
-      "eye_color": "blue-gray",
-      "height_cm": 172,
-      "build": "broad-shouldered"
+      "hair_color": "silver-white",
+      "eye_color": "sea-blue",
+      "height_cm": 162,
+      "build": "slender with a slight stoop, reflecting years of crafting and tending to household duties"
     },
     "personality": {
-      "openness": 0.50,
-      "conscientiousness": 0.80,
-      "extraversion": 0.35,
-      "agreeableness": 0.55,
-      "neuroticism": 0.45
+      "openness": 0.55,
+      "conscientiousness": 0.7,
+      "extraversion": 0.6,
+      "agreeableness": 0.8,
+      "neuroticism": 0.4
     },
-    "traits": ["practical", "tough", "protective"],
-    "brief_history": "Isolde worked as a blacksmith, inheriting the forge from her father. Known for her strong arms and no-nonsense attitude, she is respected in her town.",
-    "portrait": "temp.png",
-    "goal": "craft a blade worthy of kings",
-    "occupation": "Blacksmith"
+    "traits": [
+      "community-oriented",
+      "empathetic listener",
+      "thoughtful negotiator",
+      "adaptable collaborator"
+    ],
+    "brief_history": "Eldaer Thorneweaver, a silver-haired matriarch of the Fjordwyn Kinfolk, spent her youth crafting intricate tapestries that spoke of sea legends and ancestral tales. Raised amidst the rolling fjords, she learned the art of weaving from her mother, intertwining thread with dreams of unity. At 73, Eldaer now hosts the annual Tideweave Festival, celebrating community success and storytelling. Her sea-blue eyes sparkle as she listens empathetically to the dreams of younger kin, guiding them with the wisdom of adaptability, solidifying bonds that honor their rich heritage. In her heart, she fosters a tapestry of hope for future generations.",
+    "portrait": "portrait_Eldaer_Thorneweaver.png",
+    "goal": "Eldaer aims to weave a grand tapestry that immortalizes the stories of every kin, nurturing unity and preserving their culture for generations to come.",
+    "occupation": "Tideweaver Councilor"
   },
   {
-    "id": "npc_007",
-    "name": "Taye Okonjo",
-    "gender": "Male",
-    "age": 26,
-    "culture": "West African",
+    "id": "npc_2302e5b4",
+    "name": "Elyndor Telvashan",
+    "gender": "Female",
+    "age": 78,
+    "culture": "Valekaran Dominion",
     "appearance": {
-      "hair_color": "black",
-      "eye_color": "dark brown",
-      "height_cm": 185,
-      "build": "lithe"
+      "hair_color": "silver-gray",
+      "eye_color": "deep amber",
+      "height_cm": 162,
+      "build": "slender but slightly stooped, with soft, wrinkled skin and a hint of frailty"
+    },
+    "personality": {
+      "openness": 0.65,
+      "conscientiousness": 0.85,
+      "extraversion": 0.7,
+      "agreeableness": 0.8,
+      "neuroticism": 0.5
+    },
+    "traits": [
+      "adaptable strategist",
+      "committed collaborator",
+      "innovative planner",
+      "empathetic leader"
+    ],
+    "brief_history": "Elyndor Telvashan, the cherished matriarch of the Telvashan family, embodies the Valekaran Dominion’s commitment to unity and strategy. Raised amidst the grand halls of the Council of Elders, her silver-gray hair and deep amber eyes reflect wisdom honed through decades of collaborative planning. Now, at 78, she faces an encroaching threat to her homeland—a rival faction seeking to dismantle the Dominion’s legacy. Drawing upon her empathetic leadership, Elyndor rallies her kin, blending tradition with innovative tactics, forging alliances to secure their family’s honor and the future of the Valekaran people.",
+    "portrait": "portrait_Elyndor_Telvashan.png",
+    "goal": "Elyndor seeks to uncover the lost strategies of ancient Valekaran generals before winter, ensuring her people’s unity and strength against rising threats.",
+    "occupation": "Council Liaison Strategist"
+  },
+  {
+    "id": "npc_e4c9d95d",
+    "name": "Zariel Nyxoran",
+    "gender": "Female",
+    "age": 41,
+    "culture": "Celestial Omenkin",
+    "appearance": {
+      "hair_color": "moonlit silver",
+      "eye_color": "deep indigo",
+      "height_cm": 168,
+      "build": "gracefully slender with a poised stature, reflecting both strength and elegance"
     },
     "personality": {
       "openness": 0.85,
-      "conscientiousness": 0.55,
-      "extraversion": 0.80,
-      "agreeableness": 0.70,
-      "neuroticism": 0.20
-    },
-    "traits": ["energetic", "charming", "curious"],
-    "brief_history": "Taye grew up in a bustling trade hub where he quickly learned the art of negotiation and storytelling. His enthusiasm draws people to him.",
-    "portrait": "temp.png",
-    "goal": "become a famous traveling bard",
-    "occupation": "Bard"
-  },
-  {
-    "id": "npc_008",
-    "name": "Amara Solenne",
-    "gender": "Female",
-    "age": 19,
-    "culture": "Southern European",
-    "appearance": {
-      "hair_color": "chestnut",
-      "eye_color": "hazel-green",
-      "height_cm": 162,
-      "build": "slim"
-    },
-    "personality": {
-      "openness": 0.90,
-      "conscientiousness": 0.40,
-      "extraversion": 0.65,
-      "agreeableness": 0.85,
-      "neuroticism": 0.35
-    },
-    "traits": ["kind-hearted", "dreamy", "impulsive"],
-    "brief_history": "Amara grew up in a farming village, often sneaking away to sing in the fields. She is filled with wanderlust and romantic notions.",
-    "portrait": "temp.png",
-    "goal": "travel the world and find true love",
-    "occupation": "Wanderer"
-  },
-  {
-    "id": "npc_009",
-    "name": "Ryker Dorn",
-    "gender": "Male",
-    "age": 42,
-    "culture": "Nordic",
-    "appearance": {
-      "hair_color": "graying brown",
-      "eye_color": "steel gray",
-      "height_cm": 188,
-      "build": "heavily built"
-    },
-    "personality": {
-      "openness": 0.35,
-      "conscientiousness": 0.90,
-      "extraversion": 0.40,
-      "agreeableness": 0.45,
+      "conscientiousness": 0.6,
+      "extraversion": 0.7,
+      "agreeableness": 0.4,
       "neuroticism": 0.55
     },
-    "traits": ["stoic", "unyielding", "stern"],
-    "brief_history": "Once a commander of a warband, Ryker lost many comrades in a disastrous raid. Now he leads a quiet life but carries scars both seen and unseen.",
-    "portrait": "temp.png",
-    "goal": "find redemption for past mistakes",
-    "occupation": "Retired Soldier"
+    "traits": [
+      "introspective wonderment",
+      "impulsive enthusiasm",
+      "skeptical compassion",
+      "anxious resilience"
+    ],
+    "brief_history": "Zariel Nyxoran, born under the luminous skies of the Celestial Omenkin, was raised amidst the great Astrological Temples, where starlight whispers guided her formative years. Her moonlit silver hair and deep indigo eyes reflected her connection to the cosmos. She embraced spiritual exploration, attuning to celestial prophecies yet grew skeptical of the elders' dogma. A tragic betrayal marred her journey, igniting a burning desire for revenge against those who wielded celestial power for darkness. Now, with her impulsive enthusiasm and anxious resilience, Zariel seeks justice under the very stars that once inspired her.",
+    "portrait": "portrait_Zariel_Nyxoran.png",
+    "goal": "Zariel Nyxoran aims to amass a fortune by unearthing ancient celestial relics, using their power to challenge corrupt Omenkin elders and restore the sanctity of her culture.",
+    "occupation": "Celestial Cartographer"
   },
   {
-    "id": "npc_010",
-    "name": "Nadia Petrova",
-    "gender": "Female",
-    "age": 33,
-    "culture": "Slavic",
+    "id": "npc_cb11441b",
+    "name": "Kalthar Sirothar",
+    "gender": "Male",
+    "age": 84,
+    "culture": "Zarathian Dunesfolk",
     "appearance": {
-      "hair_color": "black",
-      "eye_color": "ice blue",
-      "height_cm": 170,
-      "build": "slender"
+      "hair_color": "silvery white",
+      "eye_color": "deep amber",
+      "height_cm": 178,
+      "build": "slender and graceful, with a dignified posture reflecting noble upbringing"
     },
     "personality": {
-      "openness": 0.60,
-      "conscientiousness": 0.75,
-      "extraversion": 0.50,
-      "agreeableness": 0.55,
-      "neuroticism": 0.45
+      "openness": 0.78,
+      "conscientiousness": 0.85,
+      "extraversion": 0.72,
+      "agreeableness": 0.8,
+      "neuroticism": 0.25
     },
-    "traits": ["cunning", "ambitious", "charming"],
-    "brief_history": "Nadia rose from poverty through wit and manipulation, learning to survive in the courts of nobles. She is always calculating her next move.",
-    "portrait": "temp.png",
-    "goal": "gain influence among the nobility",
-    "occupation": "Court Advisor"
+    "traits": [
+      "adventurous collaborator",
+      "empathetic mediator",
+      "cheerful storyteller",
+      "thoughtful innovator"
+    ],
+    "brief_history": "Kalthar Sirothar, born to a lineage of revered storytellers, traversed the Zarathian Dunes as a child, learning the ancient tales stitched in the sands. At 84, he embodies the Dunesfolk's spirit—adventurous and empathetic. Yet, a recent drought threatens their oral traditions and unity. Undeterred, Kalthar rallies his people, weaving new tales of hope and innovation, believing that dreams, much like the desert winds, can reshape the landscape of their lives. Now, he stands at the crossroads of tradition and change, a beacon for those yearning to rise with him amidst adversity.",
+    "portrait": "portrait_Kalthar_Sirothar.png",
+    "goal": "Kalthar seeks to uncover and record forgotten tales of resilience and unity before the festival, ensuring his people’s spirit endures against the drought's shadows.",
+    "occupation": "Sandweaver Storyteller"
+  },
+  {
+    "id": "npc_8375fbcb",
+    "name": "Elandor Grimsworn",
+    "gender": "Male",
+    "age": 34,
+    "culture": "Fjordalith Kinship",
+    "appearance": {
+      "hair_color": "deep chestnut brown",
+      "eye_color": "icy blue",
+      "height_cm": 182,
+      "build": "muscular and athletic with broad shoulders, defined arms, and a strong, tapered waist"
+    },
+    "personality": {
+      "openness": 0.75,
+      "conscientiousness": 0.85,
+      "extraversion": 0.7,
+      "agreeableness": 0.8,
+      "neuroticism": 0.6
+    },
+    "traits": [
+      "adventurous thinker",
+      "dedicated collaborator",
+      "empathetic mediator",
+      "resilient problem-solver"
+    ],
+    "brief_history": "Elandor Grimsworn, born amidst the towering cliffs of the Fjordalith, grew up among fierce storms and resilient kin. His chestnut hair reflected the earth, while his icy blue eyes mirrored the deep fjords. Trained in the kinship’s ways, he learned collaboration through shared hunts and empathy during communal feasts. Adversity struck when a landslide destroyed his village, but Elandor rallied the survivors, becoming a beacon of hope. Now, he embarks on a new journey, seeking to rebuild and unite fragmented kin, driven by the spirit of resilience instilled in him by his ancestors.",
+    "portrait": "portrait_Elandor_Grimsworn.png",
+    "goal": "Elandor seeks to uncover ancient Fjordalith texts hidden within the cliffs, aiming to preserve forgotten knowledge that can unite and strengthen his kin before he retires.",
+    "occupation": "Kinship Wayfinder"
+  },
+  {
+    "id": "npc_3d1a8a67",
+    "name": "Thalira Frostweaver",
+    "gender": "Male",
+    "age": 46,
+    "culture": "Frostmarrow Syndicate",
+    "appearance": {
+      "hair_color": "steel gray",
+      "eye_color": "ice blue",
+      "height_cm": 182,
+      "build": "broad-shouldered and muscular, with a sturdy frame that reflects years of rigorous training"
+    },
+    "personality": {
+      "openness": 0.85,
+      "conscientiousness": 0.45,
+      "extraversion": 0.6,
+      "agreeableness": 0.4,
+      "neuroticism": 0.75
+    },
+    "traits": [
+      "improvisational strategist",
+      "disorganized innovator",
+      "emotionally-driven collaborator",
+      "risk-averse explorer"
+    ],
+    "brief_history": "Thalira Frostweaver, born amidst the icy spires of Frostmarrow, rose as a master tactician within the Syndicate’s ranks, admired for his improvisational strategies in battle. The harsh winters forged his broad shoulders, echoing the resilience of his people, steeped in traditions of honor and loyalty. Recently, he suffered the loss of his beloved twin sister, a fellow innovator, deepening his emotional turbulence. As he navigates grief, Thalira seeks solace in the icy winds, channeling his sorrow into new strategies, hoping to honor her memory by crafting a legacy that intertwines their fates forever.",
+    "portrait": "portrait_Thalira_Frostweaver.png",
+    "goal": "To forge a legendary battle strategy that immortalizes his sister's spirit and secures the Frostweaver legacy within the Frostmarrow Syndicate.",
+    "occupation": "Icebound Tactician Artisan"
+  },
+  {
+    "id": "npc_7b0cff8e",
+    "name": "Lirael Nyssarion",
+    "gender": "Male",
+    "age": 47,
+    "culture": "Tideborne Maraliths",
+    "appearance": {
+      "hair_color": "deep ocean blue",
+      "eye_color": "seafoam green",
+      "height_cm": 182,
+      "build": "athletic with a slight paunch, reflecting a life of indulgence and nobility"
+    },
+    "personality": {
+      "openness": 0.85,
+      "conscientiousness": 0.6,
+      "extraversion": 0.5,
+      "agreeableness": 0.4,
+      "neuroticism": 0.3
+    },
+    "traits": [
+      "curious awe",
+      "strategic detachment",
+      "blunt honesty",
+      "adaptable resilience"
+    ],
+    "brief_history": "Lirael Nyssarion, born in the glimmering undersea city of Tidescry, grew amidst the Maraliths’ vibrant traditions, steeped in oceanic lore and reverence for the tides. The son of a respected tideweaver, he embraced curiosity and honesty, yet his noble status fostered indulgence. At 47, Lirael celebrates his triumph over a tempest of doubt, hosting the Festival of Tides—an event blending ancestral song and feast. As waves crash against coral spires, he reflects on his journey: the balance of resilience and strategic detachment taught by the currents, guiding him to honor both triumph and truth in life’s ebb and flow.",
+    "portrait": "portrait_Lirael_Nyssarion.png",
+    "goal": "Lirael aims to establish an oceanic library, preserving Maralith lore, to foster community unity and ignite curiosity among future generations.",
+    "occupation": "Tideway Cartographer"
+  },
+  {
+    "id": "npc_13272181",
+    "name": "Eldrin Frostwhisper",
+    "gender": "Female",
+    "age": 43,
+    "culture": "Frostborne Thalassans",
+    "appearance": {
+      "hair_color": "ice blue",
+      "eye_color": "sea green",
+      "height_cm": 165,
+      "build": "softly rounded with a medium frame, showing signs of comfort and a life of leisure"
+    },
+    "personality": {
+      "openness": 0.85,
+      "conscientiousness": 0.7,
+      "extraversion": 0.75,
+      "agreeableness": 0.9,
+      "neuroticism": 0.4
+    },
+    "traits": [
+      "empathetic listener",
+      "adventurous collaborator",
+      "cheerful mediator",
+      "culturally curious"
+    ],
+    "brief_history": "Eldrin Frostwhisper, born into a lineage of Frostborne Thalassans, grew up amidst shimmering ice sculptures and tranquil sea waves. With ice-blue hair flowing like winter streams, she thrived in community gatherings, where empathetic listening was revered. As a cheerful mediator, she smoothed tensions over spirited debates on cultural heritage. However, the recent loss of her mother, a revered storyteller, plunged Eldrin into deep mourning. Struggling to honor her mother’s legacy, she embarks on an adventurous quest to intertwine their tales, seeking solace and growth through Frostborne traditions, bridging their past with her own future.",
+    "portrait": "portrait_Eldrin_Frostwhisper.png",
+    "goal": "Eldrin aims to curate an epic anthology of Frostborne tales, honoring her mother’s legacy while fostering cultural unity and understanding through storytelling.",
+    "occupation": "Cultural Exchange Curator"
   }
 ]
