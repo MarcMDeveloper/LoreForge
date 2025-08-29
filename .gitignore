@@ -6,8 +6,6 @@
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 *.log
@@ -99,5 +97,4 @@ dev_keys.txt
 test_keys.txt
 sample_keys.txt
 Docs/Roadmap/Roadmap.md
-/Unity/Echoes of the crowd/Assets/StreamingAssets
 /Unity/Echoes of the crowd/Assets/StreamingAssets
