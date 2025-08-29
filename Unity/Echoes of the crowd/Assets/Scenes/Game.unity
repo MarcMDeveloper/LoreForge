@@ -1042,7 +1042,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &417330534
@@ -1609,7 +1609,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 662987937}
   m_HandleRect: {fileID: 662987936}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3477,7 +3477,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 50cd7469d9681594caf0ff7d8cd203a0, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.363
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -4229,7 +4229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3008884363990170418, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 10
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 3160749071871673298, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_Size
@@ -4433,7 +4433,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8551067348234668024, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 15
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8551067348234668024, guid: 229a5b75cbcc0444f926e48a8ddaed23, type: 3}
       propertyPath: m_SizeDelta.y
@@ -4582,6 +4582,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 695567212842619078, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.014282227
+      objectReference: {fileID: 0}
     - target: {fileID: 1828170429348798224, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.38841176
@@ -4623,8 +4627,16 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1867794887835936810, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
+      propertyPath: m_margin.w
+      value: -42.861877
+      objectReference: {fileID: 0}
+    - target: {fileID: 1867794887835936810, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_margin.x
       value: 2.1030312
+      objectReference: {fileID: 0}
+    - target: {fileID: 1867794887835936810, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
+      propertyPath: m_margin.y
+      value: 2.851345
       objectReference: {fileID: 0}
     - target: {fileID: 1867794887835936810, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_margin.z
@@ -4728,7 +4740,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4781264548398397068, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.64841753
+      value: 0.6802963
       objectReference: {fileID: 0}
     - target: {fileID: 4781264548398397068, guid: 444e6464d79c31e47a4eacc58bc04793, type: 3}
       propertyPath: m_SizeDelta.x

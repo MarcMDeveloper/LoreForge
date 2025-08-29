@@ -79,14 +79,6 @@ public class NPC : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IP
         // For WebGL builds, load from StreamingAssets
         string fullPath = System.IO.Path.Combine(Application.streamingAssetsPath, portraitPath);
 
-        // Check if file exists
-        if (!System.IO.File.Exists(fullPath))
-        {
-            Debug.LogWarning($"[NPC] Portrait file not found at: {fullPath}");
-            portraitImage.gameObject.SetActive(false);
-            yield break;
-        }
-
         // Load image from StreamingAssets
         using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(fullPath))
         {
